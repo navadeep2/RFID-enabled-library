@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AISYS RFID Library Management System</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div style="font-size: 1.8rem;">📚</div>
+      <div>
+        <h1>AISYS ILMS</h1>
+        <span>RFID Enterprise Edition</span>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li>
+        <button class="nav-btn active" onclick="switchTab('opac-tab')">
+          <span>🔍</span> OPAC & Catalog
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="switchTab('circulation-tab')">
+          <span>🔄</span> Circulation Desk
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="switchTab('rfid-studio-tab')">
+          <span>📡</span> RFID Studio
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="switchTab('migration-tab')">
+          <span>⚡</span> 20k Bulk Migration
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="switchTab('interop-tab')">
+          <span>🔌</span> SIP2 & NCIP Interop
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" onclick="switchTab('analytics-tab')">
+          <span>📊</span> Reports & Audit Logs
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="system-badge" id="system-health-badge">
+        <span class="pulse-dot"></span>
+        <span id="health-text">OFFLINE READY</span>
+      </div>
+      <div style="color: #94a3b8;">
+        User: <strong id="current-user-name" style="color: #fff;">Librarian Robert</strong><br>
+        Role: <span class="badge badge-info" id="current-user-role">LIBRARIAN</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View Area -->
+  <main class="main-wrapper">
+    <header class="top-bar">
+      <div class="top-title" id="page-title">OPAC Catalog & Virtual Bookshelf</div>
+      <div class="top-actions">
+        <!-- Quick Smart Card Switcher (AC 07) -->
+        <select id="smartcard-selector" class="form-control" style="width: auto;" onchange="switchSmartCard(this.value)">
+          <option value="CARD-LIB-7766">Tap Card: Librarian Robert (LIBRARIAN)</option>
+          <option value="CARD-ADM-9988">Tap Card: Administrator Jane (ADMIN)</option>
+          <option value="CARD-STF-5544">Tap Card: Staff Alice (STAFF)</option>
+          <option value="CARD-MEM-101">Tap Card: Patron Emily Brown (PATRON)</option>
+        </select>
+        <button class="btn btn-secondary" onclick="triggerSnapshotBackup()">
+          <span>💾</span> Backup DB
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- ================= TAB 1: OPAC & CATALOG ================= -->
+      <section id="opac-tab" class="tab-pane active">
+        <div class="card">
+          <div class="card-title">Catalog Search & Real-Time Discovery</div>
+          <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+              <label>Search by Title, Author, ISBN, or Category</label>
+              <input type="text" id="opac-search-input" class="form-control" placeholder="e.g. C Programming, Algorithms, Orwell..." onkeyup="if(event.key==='Enter') searchCatalog()">
+            </div>
+            <div class="form-group">
+              <label>Category Filter</label>
+              <select id="opac-cat-filter" class="form-control" onchange="searchCatalog()">
+                <option value="">All Categories</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Literature">Literature</option>
+                <option value="Reference">Reference</option>
+              </select>
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+              <button class="btn btn-primary" onclick="searchCatalog()">Search Catalog</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Virtual Bookshelf (Shelf: SHELF-CS-01)</div>
+          <div class="shelf-visual" id="shelf-visual-container">
+            <!-- Dynamic Bookshelf Spines -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Search Results (<span id="results-count">0</span> items found)</div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>ISBN</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Category</th>
+                  <th>Dewey Call #</th>
+                  <th>Available Copies</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="catalog-results-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: CIRCULATION DESK ================= -->
+      <section id="circulation-tab" class="tab-pane">
+        <div class="grid-cards">
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-title">Item Check-Out (Issue)</div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>Patron Library Card / Code</label>
+              <input type="text" id="circ-patron-code" class="form-control" placeholder="e.g. MEM-101, MEM-102 (High Fine), MEM-103 (Blocked)" value="MEM-101">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>Item Identifier (Accession # or Scanned RFID EPC)</label>
+              <input type="text" id="circ-item-id" class="form-control" placeholder="e.g. ACC-10001 or E280110520000001" value="ACC-10001">
+            </div>
+            <button class="btn btn-primary" onclick="executeCheckout()" style="width: 100%;">
+              Issue Book & Disarm RFID Security
+            </button>
+            <div id="checkout-feedback" style="margin-top: 1rem;"></div>
+          </div>
+
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-title">Item Check-In (Return & Re-Arm)</div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>Returned Item Identifier</label>
+              <input type="text" id="checkin-item-id" class="form-control" placeholder="e.g. ACC-10001 or E280110520000001" value="ACC-10001">
+            </div>
+            <button class="btn btn-success" onclick="executeCheckin()" style="width: 100%;">
+              Return Book & Arm Security Bit
+            </button>
+            <div id="checkin-feedback" style="margin-top: 1rem;"></div>
+
+            <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+            <div class="card-title" style="font-size: 0.95rem;">Renew Loan</div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <input type="text" id="renew-item-id" class="form-control" placeholder="Accession number to renew" value="ACC-10001">
+            </div>
+            <button class="btn btn-secondary" onclick="executeRenewal()" style="width: 100%;">
+              Renew Loan (+14 Days)
+            </button>
+            <div id="renew-feedback" style="margin-top: 0.5rem;"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-title">Test Policy Constraints (AC 04 Rules)</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Test the 3 hard-coded circulation invariants defined in SOP Section 4 & AC 04:
+          </p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="simulateConstraintTest('FINE_LIMIT')">
+              ⚠️ Test Fine Limit Barrier (Patron MEM-102 has $25.50 fines)
+            </button>
+            <button class="btn btn-secondary" onclick="simulateConstraintTest('MEMBER_BLOCKED')">
+              🚫 Test Suspended Patron Barrier (Patron MEM-103 is blocked)
+            </button>
+            <button class="btn btn-secondary" onclick="simulateConstraintTest('REFERENCE_ONLY')">
+              🔒 Test Reference-Only Book Barrier (Item ACC-10008 is Reference)
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: RFID STUDIO ================= -->
+      <section id="rfid-studio-tab" class="tab-pane">
+        <!-- Staff Tagging Station -->
+        <div class="card">
+          <div class="card-title">1. Staff Tagging & Encoding Station (AC 02, FR 05)</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Accession Number</label>
+              <input type="text" id="tag-accession" class="form-control" placeholder="e.g. ACC-10002" value="ACC-10002">
+            </div>
+            <div class="form-group">
+              <label>RFID EPC Gen2 Tag (Hex)</label>
+              <input type="text" id="tag-epc" class="form-control" placeholder="e.g. E2801105200000099" value="E280110520000099">
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+              <button class="btn btn-primary" onclick="executeTagAssociation()">
+                Encode & Associate Tag
+              </button>
+            </div>
+          </div>
+          <div id="tag-station-feedback"></div>
+        </div>
+
+        <!-- Handheld Shelf Inventory Scanner -->
+        <div class="card">
+          <div class="card-title">
+            <span>2. Handheld Reader: Shelf Inventory Audit (AC 05, FR 06)</span>
+            <span class="badge badge-info">Audible & Visual Cues Enabled</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Simulate a shelf sweep. The handheld checks expected items vs scanned RFID tags, detecting misplaced or missing items and emitting synthesized audio beeps.
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Target Shelf ID</label>
+              <input type="text" id="handheld-shelf" class="form-control" value="SHELF-CS-01">
+            </div>
+            <div class="form-group" style="flex: 2;">
+              <label>Detected Tag EPCs (Comma-separated)</label>
+              <input type="text" id="handheld-epcs" class="form-control" value="E280110520000001, E280110520000006">
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+              <button class="btn btn-primary" onclick="executeHandheldScan()">
+                Simulate Shelf Sweep
+              </button>
+            </div>
+          </div>
+          <div id="handheld-results-box" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Security Gate Portal Simulator -->
+        <div class="card">
+          <div class="card-title">
+            <span>3. RFID Security Gate Portal & CCTV Alarm (AC 06, FR 07)</span>
+            <span class="badge badge-danger">Offline Security Bit Verification</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Gate Portal</label>
+              <input type="text" id="gate-portal-id" class="form-control" value="GATE-MAIN-01" readonly>
+            </div>
+            <div class="form-group" style="flex: 2;">
+              <label>Passing Tag EPCs (e.g. E280110520000001 has active security bit)</label>
+              <input type="text" id="gate-passing-epcs" class="form-control" value="E280110520000001">
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+              <button class="btn btn-danger" onclick="executeGatePassage()">
+                Simulate Gate Passage
+              </button>
+            </div>
+          </div>
+
+          <div id="gate-alarm-banner" style="display: none;" class="alarm-banner">
+            <h3>🚨 SECURITY BREACH: UNAUTHORISED BOOK REMOVAL DETECTED!</h3>
+            <p id="gate-alarm-details"></p>
+            <div style="margin-top: 1rem; display: flex; gap: 1rem; align-items: center;">
+              <div>
+                <strong>Simulated CCTV Frame Snapshot:</strong><br>
+                <canvas id="cctv-canvas" width="240" height="135" style="border: 2px solid #ef4444; border-radius: 4px; background: #000; margin-top: 0.5rem;"></canvas>
+              </div>
+              <div id="gate-email-notice" style="font-size: 0.85rem;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: BULK MIGRATION ================= -->
+      <section id="migration-tab" class="tab-pane">
+        <div class="card">
+          <div class="card-title">20,000 Record Spreadsheet Migration Utility (FR 10, AC 01)</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+            Test high-volume data ingestion. You can generate a full 20,000 synthetic record test dataset with intentional valid, duplicate, and invalid edge cases, run a safe dry-run validation, execute migration into staging/catalog, and perform an instant atomic rollback.
+          </p>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <button class="btn btn-secondary" onclick="generateSyntheticDataset()">
+              <span>⚙️</span> 1. Generate 20,000 Synthetic Records CSV
+            </button>
+            <button class="btn btn-primary" onclick="runMigrationTest(true)">
+              <span>🧪</span> 2. Dry-Run Validation (No DB Changes)
+            </button>
+            <button class="btn btn-success" onclick="runMigrationTest(false)">
+              <span>🚀</span> 3. Execute Live Migration (~20k Records)
+            </button>
+          </div>
+
+          <div id="migration-status-box" style="display: none;">
+            <!-- Migration summary populated here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: SIP2 & NCIP INTEROP ================= -->
+      <section id="interop-tab" class="tab-pane">
+        <div class="grid-cards">
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-title">3M SIP2 Protocol Adapter</div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>Select SIP2 Test Message</label>
+              <select id="sip2-preset" class="form-control" onchange="document.getElementById('sip2-raw').value = this.value">
+                <option value="9300CNadmin|COpassword|">93 - Login Request</option>
+                <option value="1120240101    120000ABACC-10001|">11 - Item Information Request (ACC-10001)</option>
+                <option value="17N20240101    120000AA001|ABACC-10001|">17 - Item Checkout Request (Patron MEM-101)</option>
+                <option value="09N20240101    120000ABACC-10001|">09 - Item Checkin Request (ACC-10001)</option>
+                <option value="2920240101    120000ABACC-10001|">29 - Item Renew Request (ACC-10001)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>Raw SIP2 Frame</label>
+              <textarea id="sip2-raw" class="form-control" rows="3">9300CNadmin|COpassword|</textarea>
+            </div>
+            <button class="btn btn-primary" onclick="sendSip2Message()">Dispatch SIP2 Frame</button>
+            <div id="sip2-response-box" style="margin-top: 1rem;"></div>
+          </div>
+
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-title">NCIP 2.0 RESTful Protocol Adapter</div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>Action</label>
+              <select id="ncip-action" class="form-control">
+                <option value="LookupItem">LookupItem</option>
+                <option value="CheckOutItem">CheckOutItem</option>
+                <option value="CheckInItem">CheckInItem</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label>JSON Payload</label>
+              <textarea id="ncip-payload" class="form-control" rows="3">{"ItemId": "ACC-10001", "UserId": "MEM-101"}</textarea>
+            </div>
+            <button class="btn btn-primary" onclick="sendNcipRequest()">Send NCIP 2.0 Message</button>
+            <div id="ncip-response-box" style="margin-top: 1rem;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: REPORTS & AUDIT ================= -->
+      <section id="analytics-tab" class="tab-pane">
+        <div class="grid-cards" id="kpi-cards">
+          <!-- Dynamically populated KPI stats -->
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Immutable System Audit Trail (NFR 02, FR 11)</span>
+            <button class="btn btn-secondary" onclick="loadAuditLogs()">Refresh Audit Trail</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Timestamp</th>
+                  <th>Actor</th>
+                  <th>Action</th>
+                  <th>Entity</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="audit-logs-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
