@@ -306,6 +306,18 @@ async function executeRenewal() {
   }
 }
 
+function fillCirculationForm(patron, item) {
+  document.getElementById("circ-patron-code").value = patron;
+  document.getElementById("circ-item-id").value = item;
+  document.getElementById("checkin-item-id").value = item;
+  document.getElementById("renew-item-id").value = item;
+}
+
+function fillHandheldScan(shelf, epcs) {
+  document.getElementById("handheld-shelf").value = shelf;
+  document.getElementById("handheld-epcs").value = epcs;
+}
+
 function simulateConstraintTest(testType) {
   if (testType === 'FINE_LIMIT') {
     document.getElementById("circ-patron-code").value = "MEM-102";

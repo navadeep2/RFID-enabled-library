@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AISYS | RFID Integrated Library Management</title>
+  <title>AISYS | RFID Library Management System</title>
   <!-- Tailwind CSS via official Play CDN with custom theme config -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -14,16 +14,6 @@
           fontFamily: {
             sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
             mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'monospace'],
-          },
-          colors: {
-            brand: {
-              50: '#f0f5ff',
-              100: '#e5edff',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              900: '#1e3a8a',
-            }
           }
         }
       }
@@ -41,7 +31,7 @@
       </div>
       <div>
         <span class="font-semibold text-sm tracking-tight text-zinc-900">AISYS Library</span>
-        <span class="block text-[10px] text-zinc-500 font-medium">RFID Enterprise</span>
+        <span class="block text-[10px] text-zinc-500 font-medium">RFID Enterprise Edition</span>
       </div>
     </div>
     <button onclick="toggleMobileNav()" class="p-2 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 transition focus:outline-none">
@@ -57,42 +47,60 @@
       <div class="flex items-center justify-between pb-4 border-b border-zinc-100">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm">AI</div>
-          <span class="font-semibold text-sm tracking-tight">AISYS ILMS</span>
+          <span class="font-semibold text-sm tracking-tight">AISYS Library</span>
         </div>
         <button onclick="toggleMobileNav()" class="p-1.5 text-zinc-400 hover:text-zinc-700 rounded-md">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      <nav class="flex-1 py-4 space-y-1 overflow-y-auto">
+      <nav class="flex-1 py-4 space-y-1.5 overflow-y-auto">
         <button onclick="switchTab('opac-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          OPAC & Catalog
+          <span class="text-base">🔍</span>
+          <div class="text-left">
+            <div class="font-semibold text-zinc-900">OPAC & Catalog</div>
+            <div class="text-[10px] text-zinc-400">Search & discover books</div>
+          </div>
         </button>
         <button onclick="switchTab('circulation-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-          Circulation Desk
+          <span class="text-base">🔄</span>
+          <div class="text-left">
+            <div class="font-semibold text-zinc-900">Circulation Desk</div>
+            <div class="text-[10px] text-zinc-400">Borrow, return & renew</div>
+          </div>
         </button>
         <button onclick="switchTab('rfid-studio-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          RFID Studio
+          <span class="text-base">📡</span>
+          <div class="text-left">
+            <div class="font-semibold text-zinc-900">RFID Studio</div>
+            <div class="text-[10px] text-zinc-400">Scanners, gates & CCTV</div>
+          </div>
         </button>
         <button onclick="switchTab('migration-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-          20k Bulk Migration
+          <span class="text-base">⚡</span>
+          <div class="text-left">
+            <div class="font-semibold text-zinc-900">20k Bulk Ingestion</div>
+            <div class="text-[10px] text-zinc-400">Import spreadsheets</div>
+          </div>
         </button>
         <button onclick="switchTab('interop-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          SIP2 & NCIP Interop
+          <span class="text-base">🔌</span>
+          <div class="text-left">
+            <div class="font-semibold text-zinc-900">SIP2 & NCIP Protocol</div>
+            <div class="text-[10px] text-zinc-400">Self-check machine interop</div>
+          </div>
         </button>
         <button onclick="switchTab('analytics-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          Analytics & Audits
+          <span class="text-base">📊</span>
+          <div class="text-left">
+            <div class="font-semibold text-zinc-900">Analytics & Audits</div>
+            <div class="text-[10px] text-zinc-400">Live statistics & tamper log</div>
+          </div>
         </button>
       </nav>
 
       <div class="pt-4 border-t border-zinc-100 text-xs text-zinc-500">
-        User: <span class="font-medium text-zinc-800" id="mobile-user-name">Librarian Robert</span>
+        Active User: <span class="font-semibold text-zinc-800" id="mobile-user-name">Librarian Robert</span>
       </div>
     </div>
   </div>
@@ -102,92 +110,112 @@
     <div class="space-y-6">
       <!-- Brand Header -->
       <div class="flex items-center gap-3 px-1">
-        <div class="w-9 h-9 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm ring-1 ring-zinc-900/10">
+        <div class="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm ring-1 ring-zinc-900/10">
           AI
         </div>
         <div>
           <h1 class="font-semibold text-sm tracking-tight text-zinc-900">AISYS Library</h1>
           <div class="flex items-center gap-1.5 mt-0.5">
-            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-[11px] font-medium text-zinc-400">Offline Connected</span>
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-[11px] font-medium text-zinc-400">Air-Gapped & Offline Ready</span>
           </div>
         </div>
       </div>
 
-      <!-- Navigation Links -->
-      <nav class="space-y-1">
-        <button onclick="switchTab('opac-tab')" class="sidebar-nav-btn active group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
-          <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <span>OPAC & Catalog</span>
+      <!-- Navigation Links with Explanatory Subtitles -->
+      <nav class="space-y-1.5">
+        <button onclick="switchTab('opac-tab')" class="sidebar-nav-btn active group w-full text-left px-3 py-2.5 rounded-xl transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-sm">🔍</span>
+              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">OPAC & Catalog</span>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Search</span>
           </div>
-          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500">Search</span>
+          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Browse titles & virtual bookshelf</div>
         </button>
 
-        <button onclick="switchTab('circulation-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
-          <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-            <span>Circulation Desk</span>
+        <button onclick="switchTab('circulation-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-sm">🔄</span>
+              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">Circulation Desk</span>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Desk</span>
           </div>
-          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500">Desk</span>
+          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Issue, return & check rules</div>
         </button>
 
-        <button onclick="switchTab('rfid-studio-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
-          <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span>RFID Studio</span>
+        <button onclick="switchTab('rfid-studio-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-sm">📡</span>
+              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">RFID Studio</span>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-semibold uppercase">Mocks</span>
           </div>
-          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-mono">RFID</span>
+          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Scanners, shelf audits & gates</div>
         </button>
 
-        <button onclick="switchTab('migration-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
-          <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-            <span>20k Bulk Ingestion</span>
+        <button onclick="switchTab('migration-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-sm">⚡</span>
+              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">20k Ingestion</span>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold uppercase">~20,000</span>
           </div>
-          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 font-mono">~20k</span>
+          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Bulk spreadsheet migration</div>
         </button>
 
-        <button onclick="switchTab('interop-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
-          <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <span>SIP2 & NCIP Protocol</span>
+        <button onclick="switchTab('interop-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-sm">🔌</span>
+              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">SIP2 & NCIP</span>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Protocol</span>
           </div>
+          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">3M SIP2 & NCIP 2.0 frames</div>
         </button>
 
-        <button onclick="switchTab('analytics-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
-          <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span>Audit Trail & KPIs</span>
+        <button onclick="switchTab('analytics-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-sm">📊</span>
+              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">Audit & Reports</span>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Ledger</span>
           </div>
+          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">KPIs & immutable security log</div>
         </button>
       </nav>
     </div>
 
-    <!-- User & Station Profile Card -->
+    <!-- User Profile & Audio Control Footer -->
     <div class="pt-4 border-t border-zinc-100 space-y-3">
-      <div class="flex items-center justify-between">
+      <!-- User Profile Card -->
+      <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-50/80 border border-zinc-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-700" id="avatar-initials">
+          <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center text-xs font-bold" id="avatar-initials">
             LR
           </div>
           <div>
             <div class="text-xs font-semibold text-zinc-900 leading-tight" id="desktop-user-name">Librarian Robert</div>
-            <div class="text-[10px] text-zinc-400" id="desktop-user-role">LIBRARIAN</div>
+            <div class="text-[10px] text-zinc-400 font-medium" id="desktop-user-role">LIBRARIAN</div>
           </div>
         </div>
-        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-          Ready
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-800">
+          Online
         </span>
       </div>
 
-      <!-- Quick Audio Feedback Toggle -->
+      <!-- Quick Audio Toggle -->
       <div class="flex items-center justify-between text-[11px] text-zinc-500 px-1">
         <span class="flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-          Audio Cues
+          <span>🔊</span> Scanner Sounds
         </span>
-        <button id="audio-toggle-btn" onclick="toggleAudioMute()" class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">
+        <button id="audio-toggle-btn" onclick="toggleAudioMute()" class="font-mono text-[10px] px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium transition">
           ENABLED
         </button>
       </div>
@@ -205,12 +233,11 @@
 
       <div class="flex items-center gap-3">
         <!-- Smart Card Tap Simulator (AC 07) -->
-        <div class="flex items-center gap-2 bg-zinc-100/80 p-1 pl-2.5 rounded-lg border border-zinc-200/60">
-          <span class="text-[11px] font-medium text-zinc-500 flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            Card Tap:
+        <div class="flex items-center gap-2 bg-zinc-100/80 p-1.5 pl-3 rounded-xl border border-zinc-200/60">
+          <span class="text-xs font-medium text-zinc-600 flex items-center gap-1.5">
+            <span>💳</span> Tap Smart Card:
           </span>
-          <select id="smartcard-selector" onchange="switchSmartCard(this.value)" class="text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-md py-1 px-2.5 focus:outline-none focus:ring-1 focus:ring-zinc-900 transition">
+          <select id="smartcard-selector" onchange="switchSmartCard(this.value)" class="text-xs font-semibold text-zinc-800 bg-white border border-zinc-200 rounded-lg py-1 px-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-900 transition">
             <option value="CARD-LIB-7766">Librarian Robert (LIBRARIAN)</option>
             <option value="CARD-ADM-9988">Administrator Jane (ADMIN)</option>
             <option value="CARD-STF-5544">Staff Alice (STAFF)</option>
@@ -218,10 +245,9 @@
           </select>
         </div>
 
-        <!-- Point-in-time Snapshot Backup -->
-        <button onclick="triggerSnapshotBackup()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 transition shadow-sm active:scale-95">
-          <svg class="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-          Snapshot DB
+        <!-- Snapshot Database Backup -->
+        <button onclick="triggerSnapshotBackup()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:text-zinc-900 transition shadow-2xs active:scale-95">
+          <span>💾</span> Snapshot DB
         </button>
       </div>
     </header>
@@ -231,14 +257,35 @@
 
       <!-- ================= TAB 1: OPAC & CATALOG ================= -->
       <section id="opac-tab" class="tab-pane active space-y-6">
-        <!-- Search Bar & Filters -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-4 lg:p-5 shadow-sm space-y-4">
+        <!-- Explanatory "At a Glance" Card -->
+        <div class="p-4 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white rounded-xl border border-blue-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-blue-900">At a Glance: What is the OPAC?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">Public Discovery</span>
+            </div>
+            <p class="text-xs text-blue-800/80">
+              The <strong>Online Public Access Catalog</strong> is the search engine of the library. Readers can discover books, check how many copies are currently on the shelf, find their physical call numbers, and preview thermal spine labels.
+            </p>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button onclick="quickSearch('Algorithms')" class="px-3 py-1.5 text-xs font-semibold bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-lg transition shadow-2xs">
+              ⚡ Try "Algorithms"
+            </button>
+            <button onclick="quickSearch('Literature')" class="px-3 py-1.5 text-xs font-semibold bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-lg transition shadow-2xs">
+              ⚡ Try "Literature"
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Bar & Category Filters -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-8 lg:col-span-9 relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
                 <svg class="h-4 w-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
-              <input type="text" id="opac-search-input" onkeyup="if(event.key==='Enter') searchCatalog()" placeholder="Search title, author, ISBN (e.g. Algorithms, Orwell, C Programming)..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition placeholder:text-zinc-400">
+              <input type="text" id="opac-search-input" onkeyup="if(event.key==='Enter') searchCatalog()" placeholder="Search title, author, keyword or ISBN..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition placeholder:text-zinc-400">
             </div>
 
             <div class="sm:col-span-4 lg:col-span-3 flex gap-2">
@@ -256,37 +303,38 @@
 
           <!-- Quick Discovery Pills -->
           <div class="flex items-center gap-2 pt-1 overflow-x-auto text-xs text-zinc-500">
-            <span class="font-medium text-zinc-400 text-[11px] uppercase tracking-wider">Quick:</span>
+            <span class="font-medium text-zinc-400 text-[11px] uppercase tracking-wider">Quick Filters:</span>
             <button onclick="quickSearch('Computer Science')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Computer Science</button>
             <button onclick="quickSearch('Literature')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Literature</button>
             <button onclick="quickSearch('Algorithms')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Algorithms</button>
-            <button onclick="quickSearch('Kernighan')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Kernighan</button>
+            <button onclick="quickSearch('Kernighan')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">C Programming</button>
+            <button onclick="quickSearch('')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Show All</button>
           </div>
         </div>
 
-        <!-- Virtual Bookshelf (Visual tactile representations) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-3">
+        <!-- Virtual Bookshelf (Visual Tactile Representation) -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-3">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-semibold text-zinc-900">Virtual Bookshelf — <code class="text-xs bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-700">SHELF-CS-01</code></h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Physical orientation and RFID status on shelf. Click a book to inspect its RFID EPC.</p>
+              <h3 class="text-sm font-semibold text-zinc-900">Virtual Bookshelf — <code class="text-xs bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-700 font-mono">SHELF-CS-01</code></h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Click any book spine below to inspect its live RFID EPC tag and loan status.</p>
             </div>
-            <span class="text-xs font-mono text-zinc-400">Interactive 3D spines</span>
+            <span class="text-xs text-zinc-400 font-mono">Tactile 3D Shelf</span>
           </div>
 
-          <!-- Bookshelf Container -->
+          <!-- Bookshelf Visualizer -->
           <div class="relative bg-gradient-to-b from-stone-900 to-stone-950 rounded-xl p-6 pt-10 border-b-8 border-stone-800 shadow-inner overflow-x-auto flex items-end gap-2.5 min-h-[160px]" id="shelf-visual-container">
             <!-- Dynamic Spines Injected Here -->
           </div>
         </div>
 
         <!-- Search Results Table -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-2xs">
           <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
             <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">
               Catalog Titles (<span id="results-count" class="text-zinc-900 font-mono">0</span> Found)
             </h3>
-            <span class="text-xs text-zinc-400">Showing top results</span>
+            <span class="text-xs text-zinc-400">Live inventory tracking</span>
           </div>
 
           <div class="overflow-x-auto">
@@ -298,7 +346,7 @@
                   <th class="py-3 px-4">Author</th>
                   <th class="py-3 px-4">Category</th>
                   <th class="py-3 px-4">Call Number</th>
-                  <th class="py-3 px-4">Availability</th>
+                  <th class="py-3 px-4">Available Copies</th>
                   <th class="py-3 px-4 text-right">Spine Sticker</th>
                 </tr>
               </thead>
@@ -312,32 +360,65 @@
 
       <!-- ================= TAB 2: CIRCULATION DESK ================= -->
       <section id="circulation-tab" class="tab-pane space-y-6">
+        <!-- Explanatory "At a Glance" Card -->
+        <div class="p-4 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-white rounded-xl border border-emerald-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-emerald-900">At a Glance: What is the Circulation Desk?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-700">Lending & Security</span>
+            </div>
+            <p class="text-xs text-emerald-800/80">
+              This is where books are issued, returned, and renewed. <strong>Notice the RFID connection:</strong> when you issue a book, its RFID tag security bit is <strong>disarmed (0)</strong> so it won't alarm the security gate. When returned, it is <strong>re-armed (1)</strong> to protect against theft.
+            </p>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button onclick="fillCirculationForm('MEM-101', 'ACC-10001')" class="px-3 py-1.5 text-xs font-semibold bg-white border border-emerald-200 text-emerald-700 hover:bg-emerald-50 rounded-lg transition shadow-2xs">
+              ⚡ Fill Normal Loan
+            </button>
+          </div>
+        </div>
+
         <!-- Interactive Desk Workstation -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Check-Out Box -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                <h3 class="text-sm font-semibold text-zinc-900">Check-Out (Issue Book)</h3>
+                <h3 class="text-sm font-semibold text-zinc-900">Step 1: Check-Out (Issue Book)</h3>
               </div>
-              <span class="text-[11px] font-mono text-zinc-400">DISARMS RFID SECURITY (0)</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold">SETS SECURITY BIT = 0</span>
             </div>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">Patron Code / Smart Card</label>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-xs font-medium text-zinc-700">Patron Card / Member Code</label>
+                  <span class="text-[11px] text-zinc-400">e.g. MEM-101</span>
+                </div>
                 <input type="text" id="circ-patron-code" value="MEM-101" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
               </div>
 
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">Item Identifier (Accession # or RFID EPC)</label>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-xs font-medium text-zinc-700">Book Accession Number or RFID EPC</label>
+                  <span class="text-[11px] text-zinc-400">e.g. ACC-10001</span>
+                </div>
                 <input type="text" id="circ-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
               </div>
 
-              <button onclick="executeCheckout()" class="w-full py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 text-white text-xs lg:text-sm font-medium rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
+              <!-- Quick Demo Fill Pills -->
+              <div class="flex flex-wrap gap-1.5 pt-1 text-[11px]">
+                <span class="text-zinc-400 font-medium py-0.5">Quick Autofill:</span>
+                <button onclick="fillCirculationForm('MEM-101', 'ACC-10001')" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">Normal Loan</button>
+                <button onclick="fillCirculationForm('MEM-102', 'ACC-10001')" class="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-800">Fine Limit Test</button>
+                <button onclick="fillCirculationForm('MEM-103', 'ACC-10001')" class="px-2 py-0.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-800">Suspended Patron</button>
+                <button onclick="fillCirculationForm('MEM-101', 'ACC-10008')" class="px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-800">Reference Book</button>
+              </div>
+
+              <button onclick="executeCheckout()" class="w-full py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 text-white text-xs lg:text-sm font-semibold rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                Issue Book & Disarm Security
+                Issue Book & Disarm RFID Security
               </button>
 
               <div id="checkout-feedback"></div>
@@ -345,22 +426,22 @@
           </div>
 
           <!-- Check-In Box -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <h3 class="text-sm font-semibold text-zinc-900">Check-In (Return Book)</h3>
+                <h3 class="text-sm font-semibold text-zinc-900">Step 2: Check-In (Return Book)</h3>
               </div>
-              <span class="text-[11px] font-mono text-zinc-400">RE-ARMS SECURITY BIT (1)</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold">RE-ARMS SECURITY BIT = 1</span>
             </div>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">Scanned Item Identifier</label>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">Returned Item Accession Number</label>
                 <input type="text" id="checkin-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
               </div>
 
-              <button onclick="executeCheckin()" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs lg:text-sm font-medium rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
+              <button onclick="executeCheckin()" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs lg:text-sm font-semibold rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Return Book & Re-Arm Security
               </button>
@@ -368,41 +449,50 @@
               <div id="checkin-feedback"></div>
 
               <!-- Quick Renewal Accordion/Section -->
-              <div class="pt-3 border-t border-zinc-100">
+              <div class="pt-3 border-t border-zinc-100 space-y-2">
+                <span class="text-xs font-medium text-zinc-700 block">Extend Lending Period (Renewal):</span>
                 <div class="flex gap-2">
                   <input type="text" id="renew-item-id" value="ACC-10001" placeholder="Item accession" class="flex-1 px-3 py-1.5 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
-                  <button onclick="executeRenewal()" class="px-3 py-1.5 text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition">
-                    Renew (+14d)
+                  <button onclick="executeRenewal()" class="px-3.5 py-1.5 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition">
+                    Renew (+14 Days)
                   </button>
                 </div>
-                <div id="renew-feedback" class="mt-2 text-xs"></div>
+                <div id="renew-feedback" class="text-xs"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Policy Invariants Barrier Test (AC 04) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-3">
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-zinc-900">Circulation Policy Invariant Simulators (AC 04)</h3>
-            <span class="text-xs text-zinc-400">One-click edge cases</span>
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-900">1-Click Policy Barrier Simulators (AC 04 Requirements)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Click any card below to test how the system automatically blocks invalid borrowing:</p>
+            </div>
+            <span class="text-xs font-mono text-zinc-400">Strict Invariants</span>
           </div>
-          <p class="text-xs text-zinc-500">Test the 3 strict barrier enforcement rules defined in the SOP specification:</p>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <button onclick="simulateConstraintTest('FINE_LIMIT')" class="p-3 text-left border border-zinc-200 rounded-lg hover:border-amber-300 hover:bg-amber-50/30 transition group">
-              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-amber-800">1. Fine Limit Barrier</span>
-              <span class="block text-[11px] text-zinc-500 mt-1">MEM-102 owes $25.50 (Limit $15.00)</span>
+            <button onclick="simulateConstraintTest('FINE_LIMIT')" class="p-3.5 text-left border border-zinc-200/80 rounded-xl hover:border-amber-300 hover:bg-amber-50/40 transition group shadow-2xs">
+              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-amber-900 flex items-center gap-1.5">
+                <span>⚠️</span> 1. Fine Limit Barrier
+              </span>
+              <span class="block text-[11px] text-zinc-500 mt-1">Patron MEM-102 owes $25.50 (Exceeds $15 limit) &rarr; Checkout blocked.</span>
             </button>
 
-            <button onclick="simulateConstraintTest('MEMBER_BLOCKED')" class="p-3 text-left border border-zinc-200 rounded-lg hover:border-rose-300 hover:bg-rose-50/30 transition group">
-              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-rose-800">2. Suspended Patron</span>
-              <span class="block text-[11px] text-zinc-500 mt-1">MEM-103 account blocked by admin</span>
+            <button onclick="simulateConstraintTest('MEMBER_BLOCKED')" class="p-3.5 text-left border border-zinc-200/80 rounded-xl hover:border-rose-300 hover:bg-rose-50/40 transition group shadow-2xs">
+              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-rose-900 flex items-center gap-1.5">
+                <span>🚫</span> 2. Suspended Patron
+              </span>
+              <span class="block text-[11px] text-zinc-500 mt-1">Patron MEM-103 is marked suspended &rarr; Borrowing denied.</span>
             </button>
 
-            <button onclick="simulateConstraintTest('REFERENCE_ONLY')" class="p-3 text-left border border-zinc-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/30 transition group">
-              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-blue-800">3. Reference Only</span>
-              <span class="block text-[11px] text-zinc-500 mt-1">ACC-10008 is Reference Dictionary</span>
+            <button onclick="simulateConstraintTest('REFERENCE_ONLY')" class="p-3.5 text-left border border-zinc-200/80 rounded-xl hover:border-blue-300 hover:bg-blue-50/40 transition group shadow-2xs">
+              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-blue-900 flex items-center gap-1.5">
+                <span>🔒</span> 3. Reference Only Book
+              </span>
+              <span class="block text-[11px] text-zinc-500 mt-1">Book ACC-10008 is a reference dictionary &rarr; Cannot leave library.</span>
             </button>
           </div>
         </div>
@@ -410,19 +500,35 @@
 
       <!-- ================= TAB 3: RFID STUDIO ================= -->
       <section id="rfid-studio-tab" class="tab-pane space-y-6">
+        <!-- Explanatory "At a Glance" Card -->
+        <div class="p-4 bg-gradient-to-r from-indigo-50/70 via-purple-50/40 to-white rounded-xl border border-indigo-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-indigo-900">At a Glance: What is the RFID Studio?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-100 text-indigo-700">Hardware Simulator</span>
+            </div>
+            <p class="text-xs text-indigo-800/80">
+              This lab simulates the 3 main RFID devices in a library: <strong>(1) Staff Station</strong> to link RFID tags to books, <strong>(2) Handheld Scanner</strong> to audit shelves for misplaced books, and <strong>(3) Security Gates</strong> that catch unissued books with alarms and simulated CCTV snapshots.
+            </p>
+          </div>
+        </div>
+
         <!-- 1. Staff Station Tagging -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div>
-              <h3 class="text-sm font-semibold text-zinc-900">1. Staff RFID Encoding Station (AC 02, FR 05)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Validate catalog copy and pair a physical EPC Gen2 tag ID</p>
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">1</span>
+                <h3 class="text-sm font-semibold text-zinc-900">Staff RFID Tag Encoding Station (AC 02, FR 05)</h3>
+              </div>
+              <p class="text-xs text-zinc-400 mt-0.5 pl-7">Validate catalog record and burn/pair an Electronic Product Code (EPC Gen2) tag</p>
             </div>
-            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">STATION-DESK-01</span>
+            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">DESK-READER-01</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-4">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Accession Number</label>
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Accession Barcode</label>
               <input type="text" id="tag-accession" value="ACC-10002" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-5">
@@ -430,7 +536,7 @@
               <input type="text" id="tag-epc" value="E280110520000099" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-3 flex items-end">
-              <button onclick="executeTagAssociation()" class="w-full py-2 px-3 text-xs lg:text-sm font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+              <button onclick="executeTagAssociation()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
                 Pair & Lock Tag
               </button>
             </div>
@@ -439,13 +545,27 @@
         </div>
 
         <!-- 2. Handheld Scanner (Audible & Visual Cues) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div>
-              <h3 class="text-sm font-semibold text-zinc-900">2. Handheld Shelf Auditor (AC 05, FR 06)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Rapid batch sweep. Synthesizes hardware beeps & flags misplaced items.</p>
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">2</span>
+                <h3 class="text-sm font-semibold text-zinc-900">Handheld Shelf Inventory Auditor (AC 05, FR 06)</h3>
+              </div>
+              <p class="text-xs text-zinc-400 mt-0.5 pl-7">Simulate walking the stacks with an RFID wand. Catches missing and misplaced books with audio beeps.</p>
             </div>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700">Audio Synth Ready</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 text-indigo-700">Audio Synthesizer Active</span>
+          </div>
+
+          <!-- Quick Try Buttons -->
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-zinc-400 font-medium">Quick Scenarios:</span>
+            <button onclick="fillHandheldScan('SHELF-CS-01', 'E280110520000001, E280110520000002, E280110520000003')" class="px-2.5 py-1 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium">
+              ⚡ Perfect Shelf (All Correct)
+            </button>
+            <button onclick="fillHandheldScan('SHELF-CS-01', 'E280110520000001, E280110520000006')" class="px-2.5 py-1 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 font-medium">
+              ⚠️ Misplaced Book (Belongs in Literature)
+            </button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
@@ -458,7 +578,7 @@
               <input type="text" id="handheld-epcs" value="E280110520000001, E280110520000006" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-3 flex items-end">
-              <button onclick="executeHandheldScan()" class="w-full py-2 px-3 text-xs lg:text-sm font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+              <button onclick="executeHandheldScan()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
                 Simulate Shelf Sweep
               </button>
             </div>
@@ -467,26 +587,37 @@
         </div>
 
         <!-- 3. Security Gate Portal & CCTV Alarm Simulator -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div>
-              <h3 class="text-sm font-semibold text-zinc-900">3. RFID Security Gate & CCTV Portal (AC 06, FR 07)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Detects unissued items, reads security bit offline, records CCTV image, queues alert</p>
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">3</span>
+                <h3 class="text-sm font-semibold text-zinc-900">Security Gate Portal & CCTV Alarm (AC 06, FR 07)</h3>
+              </div>
+              <p class="text-xs text-zinc-400 mt-0.5 pl-7">Reads RFID security bit offline. Sounds emergency siren, grabs CCTV photo & queues security email.</p>
             </div>
             <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">GATE-MAIN-01</span>
           </div>
 
+          <!-- Quick Try Buttons -->
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-zinc-400 font-medium">Quick Test:</span>
+            <button onclick="document.getElementById('gate-passing-epcs').value = 'E280110520000001'; executeGatePassage()" class="px-2.5 py-1 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 font-medium">
+              🚨 Trigger Security Breach (Unissued Book)
+            </button>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-3">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Portal Location</label>
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Gate Portal ID</label>
               <input type="text" id="gate-portal-id" value="GATE-MAIN-01" readonly class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-100 text-zinc-500 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-6">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Passing Tag EPC (Unissued ACC-10001 has Security Bit = 1)</label>
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Passing Tag EPC (ACC-10001 tag has Security Bit = 1)</label>
               <input type="text" id="gate-passing-epcs" value="E280110520000001" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-3 flex items-end">
-              <button onclick="executeGatePassage()" class="w-full py-2 px-3 text-xs lg:text-sm font-medium bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition shadow-sm">
+              <button onclick="executeGatePassage()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition shadow-sm">
                 Pass Through Gate
               </button>
             </div>
@@ -496,13 +627,13 @@
           <div id="gate-alarm-banner" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-5 space-y-4 animate-pulse">
             <div class="flex items-center gap-2 text-rose-700 font-semibold text-sm">
               <span class="w-3 h-3 rounded-full bg-rose-600"></span>
-              SECURITY BREACH: UNAUTHORISED BOOK REMOVAL DETECTED
+              SECURITY BREACH: UNAUTHORISED BOOK DETECTED AT EXIT!
             </div>
             <p id="gate-alarm-details" class="text-xs text-rose-800"></p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-white/80 p-3 rounded-lg border border-rose-100">
               <div>
-                <span class="text-[11px] font-medium text-zinc-500 block mb-1">Simulated CCTV Forensic Snapshot:</span>
+                <span class="text-[11px] font-medium text-zinc-500 block mb-1">Simulated CCTV Forensic Frame:</span>
                 <canvas id="cctv-canvas" width="240" height="135" class="rounded border border-zinc-300 shadow-sm bg-black"></canvas>
               </div>
               <div id="gate-email-notice" class="text-xs text-zinc-600 space-y-1">
@@ -515,28 +646,59 @@
 
       <!-- ================= TAB 4: BULK MIGRATION ================= -->
       <section id="migration-tab" class="tab-pane space-y-6">
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
-            <div>
-              <h3 class="text-sm font-semibold text-zinc-900">20,000 Record Spreadsheet Migration Pipeline (FR 10, AC 01)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">High-speed streaming ingestion, pre-validation dry-run, reconciliation, and instant atomic rollback.</p>
+        <!-- Explanatory "At a Glance" Card -->
+        <div class="p-4 bg-gradient-to-r from-amber-50/70 via-orange-50/40 to-white rounded-xl border border-amber-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-amber-900">At a Glance: What is 20k Bulk Ingestion?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800">Legacy Migration</span>
             </div>
-            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">ACID Staging</span>
+            <p class="text-xs text-amber-800/80">
+              Imports legacy spreadsheets (~20,000 records) safely into the library database. It uses an <strong>isolated staging table</strong> so live data is never corrupted, rejects malformed/duplicate rows, reconciles counts, and provides an instant <strong>undo button (atomic rollback)</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-5">
+          <div>
+            <h3 class="text-sm font-semibold text-zinc-900">Step-by-Step Data Migration Engine (FR 10, AC 01)</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Follow the 3 sequential steps below to demonstrate safe high-throughput ingestion:</p>
           </div>
 
-          <div class="flex flex-wrap gap-3">
-            <button onclick="generateSyntheticDataset()" class="px-4 py-2 text-xs lg:text-sm font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition shadow-sm flex items-center gap-2">
-              <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-              1. Generate 20,000 Synthetic CSV
-            </button>
-            <button onclick="runMigrationTest(true)" class="px-4 py-2 text-xs lg:text-sm font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm flex items-center gap-2">
-              <svg class="w-4 h-4 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              2. Dry-Run Validation (No DB Changes)
-            </button>
-            <button onclick="runMigrationTest(false)" class="px-4 py-2 text-xs lg:text-sm font-medium bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-sm flex items-center gap-2">
-              <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-              3. Execute Live Ingestion
-            </button>
+          <!-- 3-Step Process Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 space-y-2">
+              <div class="text-xs font-bold text-zinc-700 flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px]">1</span>
+                Prepare Dataset
+              </div>
+              <p class="text-[11px] text-zinc-500">Generates 20,000 realistic records with intentional duplicate and malformed test rows.</p>
+              <button onclick="generateSyntheticDataset()" class="w-full py-2 px-3 text-xs font-semibold bg-white border border-zinc-300 hover:bg-zinc-50 text-zinc-800 rounded-lg transition shadow-2xs">
+                ⚙️ Generate 20k File
+              </button>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 space-y-2">
+              <div class="text-xs font-bold text-zinc-700 flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px]">2</span>
+                Dry-Run Validation
+              </div>
+              <p class="text-[11px] text-zinc-500">Performs full pre-validation & duplicate checks in memory without modifying the database.</p>
+              <button onclick="runMigrationTest(true)" class="w-full py-2 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-2xs">
+                🧪 Run Dry-Run (Safe)
+              </button>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 space-y-2">
+              <div class="text-xs font-bold text-zinc-700 flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px]">3</span>
+                Live Ingestion
+              </div>
+              <p class="text-[11px] text-zinc-500">Atomically writes records into catalog and proves reconciliation balance.</p>
+              <button onclick="runMigrationTest(false)" class="w-full py-2 px-3 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-2xs">
+                🚀 Live Migration
+              </button>
+            </div>
           </div>
 
           <div id="migration-status-box" class="hidden"></div>
@@ -545,11 +707,27 @@
 
       <!-- ================= TAB 5: SIP2 & NCIP INTEROP ================= -->
       <section id="interop-tab" class="tab-pane space-y-6">
+        <!-- Explanatory "At a Glance" Card -->
+        <div class="p-4 bg-gradient-to-r from-purple-50/70 via-indigo-50/40 to-white rounded-xl border border-purple-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-purple-900">At a Glance: What is SIP2 & NCIP?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-100 text-purple-800">Industry Standards</span>
+            </div>
+            <p class="text-xs text-purple-800/80">
+              <strong>SIP2</strong> (3M Standard Interchange Protocol) and <strong>NCIP 2.0</strong> are the universal protocols libraries use to communicate with self-checkout kiosks, automated book sorters, and external ILMS systems.
+            </p>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- SIP2 Adapter -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
-              <h3 class="text-sm font-semibold text-zinc-900">3M SIP2 Protocol Adapter</h3>
+              <div>
+                <h3 class="text-sm font-semibold text-zinc-900">3M SIP2 Protocol Adapter (AC 03)</h3>
+                <p class="text-xs text-zinc-400 mt-0.5">Dispatches standard delimited socket frames</p>
+              </div>
               <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">RFC SIP2</span>
             </div>
 
@@ -567,10 +745,10 @@
 
               <div>
                 <label class="block text-xs font-medium text-zinc-700 mb-1">Raw Frame</label>
-                <textarea id="sip2-raw" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-900 text-zinc-100 rounded-lg border border-zinc-800">9300CNadmin|COpassword|</textarea>
+                <textarea id="sip2-raw" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-950 text-zinc-100 rounded-lg border border-zinc-800">9300CNadmin|COpassword|</textarea>
               </div>
 
-              <button onclick="sendSip2Message()" class="w-full py-2 px-3 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+              <button onclick="sendSip2Message()" class="w-full py-2.5 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
                 Dispatch SIP2 Message
               </button>
 
@@ -579,9 +757,12 @@
           </div>
 
           <!-- NCIP 2.0 Adapter -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
-              <h3 class="text-sm font-semibold text-zinc-900">NCIP 2.0 RESTful Adapter</h3>
+              <div>
+                <h3 class="text-sm font-semibold text-zinc-900">NCIP 2.0 RESTful Protocol Adapter</h3>
+                <p class="text-xs text-zinc-400 mt-0.5">Modern JSON envelopes for Circulation Interchange</p>
+              </div>
               <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">NISO NCIP</span>
             </div>
 
@@ -597,10 +778,10 @@
 
               <div>
                 <label class="block text-xs font-medium text-zinc-700 mb-1">JSON Envelope Payload</label>
-                <textarea id="ncip-payload" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-900 text-emerald-400 rounded-lg border border-zinc-800">{"ItemId": "ACC-10001", "UserId": "MEM-101"}</textarea>
+                <textarea id="ncip-payload" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-950 text-emerald-400 rounded-lg border border-zinc-800">{"ItemId": "ACC-10001", "UserId": "MEM-101"}</textarea>
               </div>
 
-              <button onclick="sendNcipRequest()" class="w-full py-2 px-3 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+              <button onclick="sendNcipRequest()" class="w-full py-2.5 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
                 Send NCIP 2.0 Request
               </button>
 
@@ -612,19 +793,32 @@
 
       <!-- ================= TAB 6: REPORTS & AUDIT ================= -->
       <section id="analytics-tab" class="tab-pane space-y-6">
+        <!-- Explanatory "At a Glance" Card -->
+        <div class="p-4 bg-gradient-to-r from-zinc-100/80 to-white rounded-xl border border-zinc-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-zinc-900">At a Glance: What is the Audit Trail & KPIs?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-200 text-zinc-700">Governance & Security</span>
+            </div>
+            <p class="text-xs text-zinc-600">
+              Provides real-time visibility into total catalog titles, RFID tagging percentages, active loans, and gate alarms. The <strong>immutable audit trail</strong> cryptographically logs every checkout, return, card tap, and gate alarm.
+            </p>
+          </div>
+        </div>
+
         <!-- Live KPI Stats Grid -->
         <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="kpi-cards">
           <!-- Dynamically Populated -->
         </div>
 
         <!-- Audit Trail Table -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-sm space-y-3">
+        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-2xs space-y-3">
           <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
             <div>
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Immutable Audit Trail (NFR 02, FR 11)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Cryptographic log of all circulation, administrative, and hardware events</p>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Immutable Audit Ledger (NFR 02, FR 11)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Append-only record of every administrative and patron transaction</p>
             </div>
-            <button onclick="loadAuditLogs()" class="px-3 py-1.5 text-xs font-medium bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 rounded-lg transition shadow-sm">
+            <button onclick="loadAuditLogs()" class="px-3.5 py-1.5 text-xs font-semibold bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 rounded-lg transition shadow-2xs">
               Refresh Trail
             </button>
           </div>
@@ -652,7 +846,7 @@
     </div>
   </main>
 
-  <!-- Spine Label Preview Modal -->
+  <!-- Thermal Spine Label Preview Modal -->
   <div id="spine-modal" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-zinc-200 shadow-2xl max-w-sm w-full p-6 space-y-4">
       <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
