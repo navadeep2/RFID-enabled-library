@@ -156,3 +156,4 @@ class MigrationReport(BaseModel):
     is_dry_run: bool
     error_sample: List[Dict[str, Any]]
     duration_seconds: float
+    reconciliation: Optional[Dict[str, Any]] = None

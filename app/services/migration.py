@@ -220,6 +220,8 @@ def rollback_migration_batch(batch_id: str, db_path: Optional[str] = None) -> Di
             placeholders = ",".join("?" for _ in accessions)
             cursor.execute(f"DELETE FROM items WHERE accession_number IN ({placeholders})", accessions)
             deleted_items = cursor.rowcount
+            # Clean up orphaned titles that have no items
+            cursor.execute("DELETE FROM titles WHERE id NOT IN (SELECT DISTINCT title_id FROM items)")
 
         cursor.execute("UPDATE migration_staging SET validation_status = 'ROLLED_BACK' WHERE batch_id = ?", (batch_id,))
 

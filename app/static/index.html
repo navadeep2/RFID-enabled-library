@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AISYS | RFID Library Management System</title>
-  <!-- Tailwind CSS via official Play CDN with custom theme config -->
+  <title>Smart Library System | Simple & Easy</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,31 +23,31 @@
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden text-zinc-900 font-sans selection:bg-zinc-200">
 
-  <!-- Mobile Top Bar with Hamburger -->
-  <header class="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-200/80 z-40">
+  <!-- Mobile Top Bar with Menu Button -->
+  <header class="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-200 z-40">
     <div class="flex items-center gap-2.5">
-      <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
-        AI
+      <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+        📚
       </div>
       <div>
-        <span class="font-semibold text-sm tracking-tight text-zinc-900">AISYS Library</span>
-        <span class="block text-[10px] text-zinc-500 font-medium">RFID Enterprise Edition</span>
+        <span class="font-bold text-sm text-zinc-900">Smart Library</span>
+        <span class="block text-[11px] text-zinc-500">RFID Simple System</span>
       </div>
     </div>
-    <button onclick="toggleMobileNav()" class="p-2 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 transition focus:outline-none">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <button onclick="toggleMobileNav()" class="p-2 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 transition focus:outline-none" aria-label="Toggle Navigation">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
     </button>
   </header>
 
-  <!-- Mobile Navigation Overlay Drawer -->
+  <!-- Mobile Navigation Drawer -->
   <div id="mobile-nav-drawer" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden md:hidden transition-opacity">
     <div class="fixed inset-y-0 left-0 w-72 bg-white p-5 flex flex-col shadow-2xl">
       <div class="flex items-center justify-between pb-4 border-b border-zinc-100">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm">AI</div>
-          <span class="font-semibold text-sm tracking-tight">AISYS Library</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📚</span>
+          <span class="font-bold text-sm">Smart Library</span>
         </div>
         <button onclick="toggleMobileNav()" class="p-1.5 text-zinc-400 hover:text-zinc-700 rounded-md">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -56,51 +56,51 @@
 
       <nav class="flex-1 py-4 space-y-1.5 overflow-y-auto">
         <button onclick="switchTab('opac-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <span class="text-base">🔍</span>
+          <span class="text-lg">🔍</span>
           <div class="text-left">
-            <div class="font-semibold text-zinc-900">OPAC & Catalog</div>
-            <div class="text-[10px] text-zinc-400">Search & discover books</div>
+            <div class="font-bold text-zinc-900">1. Find Books</div>
+            <div class="text-xs text-zinc-500">Search and see what is on shelves</div>
           </div>
         </button>
         <button onclick="switchTab('circulation-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <span class="text-base">🔄</span>
+          <span class="text-lg">🔄</span>
           <div class="text-left">
-            <div class="font-semibold text-zinc-900">Circulation Desk</div>
-            <div class="text-[10px] text-zinc-400">Borrow, return & renew</div>
+            <div class="font-bold text-zinc-900">2. Borrow & Return</div>
+            <div class="text-xs text-zinc-500">Take books home or return them</div>
           </div>
         </button>
         <button onclick="switchTab('rfid-studio-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <span class="text-base">📡</span>
+          <span class="text-lg">📡</span>
           <div class="text-left">
-            <div class="font-semibold text-zinc-900">RFID Studio</div>
-            <div class="text-[10px] text-zinc-400">Scanners, gates & CCTV</div>
+            <div class="font-bold text-zinc-900">3. Smart Tags & Doors</div>
+            <div class="text-xs text-zinc-500">Handheld scanner & anti-theft alarm</div>
           </div>
         </button>
         <button onclick="switchTab('migration-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <span class="text-base">⚡</span>
+          <span class="text-lg">⚡</span>
           <div class="text-left">
-            <div class="font-semibold text-zinc-900">20k Bulk Ingestion</div>
-            <div class="text-[10px] text-zinc-400">Import spreadsheets</div>
+            <div class="font-bold text-zinc-900">4. Import 20,000 Books</div>
+            <div class="text-xs text-zinc-500">Load books from spreadsheet</div>
           </div>
         </button>
         <button onclick="switchTab('interop-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <span class="text-base">🔌</span>
+          <span class="text-lg">🔌</span>
           <div class="text-left">
-            <div class="font-semibold text-zinc-900">SIP2 & NCIP Protocol</div>
-            <div class="text-[10px] text-zinc-400">Self-check machine interop</div>
+            <div class="font-bold text-zinc-900">5. Self-Checkout Machines</div>
+            <div class="text-xs text-zinc-500">Test kiosk connection (SIP2)</div>
           </div>
         </button>
         <button onclick="switchTab('analytics-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
-          <span class="text-base">📊</span>
+          <span class="text-lg">📊</span>
           <div class="text-left">
-            <div class="font-semibold text-zinc-900">Analytics & Audits</div>
-            <div class="text-[10px] text-zinc-400">Live statistics & tamper log</div>
+            <div class="font-bold text-zinc-900">6. History & Stats</div>
+            <div class="text-xs text-zinc-500">Who borrowed what & stats</div>
           </div>
         </button>
       </nav>
 
       <div class="pt-4 border-t border-zinc-100 text-xs text-zinc-500">
-        Active User: <span class="font-semibold text-zinc-800" id="mobile-user-name">Librarian Robert</span>
+        Logged in as: <strong class="text-zinc-900" id="mobile-user-name">Robert (Librarian)</strong>
       </div>
     </div>
   </div>
@@ -110,113 +110,106 @@
     <div class="space-y-6">
       <!-- Brand Header -->
       <div class="flex items-center gap-3 px-1">
-        <div class="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm ring-1 ring-zinc-900/10">
-          AI
+        <div class="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+          📚
         </div>
         <div>
-          <h1 class="font-semibold text-sm tracking-tight text-zinc-900">AISYS Library</h1>
+          <h1 class="font-bold text-sm text-zinc-900">Smart Library</h1>
           <div class="flex items-center gap-1.5 mt-0.5">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-[11px] font-medium text-zinc-400">Air-Gapped & Offline Ready</span>
+            <span class="text-[11px] font-medium text-zinc-500">System Ready & Offline</span>
           </div>
         </div>
       </div>
 
-      <!-- Navigation Links with Explanatory Subtitles -->
+      <!-- Navigation Links -->
       <nav class="space-y-1.5">
-        <button onclick="switchTab('opac-tab')" class="sidebar-nav-btn active group w-full text-left px-3 py-2.5 rounded-xl transition">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-sm">🔍</span>
-              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">OPAC & Catalog</span>
+        <button onclick="switchTab('opac-tab')" class="sidebar-nav-btn active group w-full text-left px-3.5 py-3 rounded-xl transition">
+          <div class="flex items-center gap-3">
+            <span class="text-lg">🔍</span>
+            <div>
+              <div class="text-xs lg:text-sm font-bold text-zinc-900">1. Find Books</div>
+              <div class="text-[11px] text-zinc-500">Search and browse shelf</div>
             </div>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Search</span>
           </div>
-          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Browse titles & virtual bookshelf</div>
         </button>
 
-        <button onclick="switchTab('circulation-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-sm">🔄</span>
-              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">Circulation Desk</span>
+        <button onclick="switchTab('circulation-tab')" class="sidebar-nav-btn group w-full text-left px-3.5 py-3 rounded-xl transition">
+          <div class="flex items-center gap-3">
+            <span class="text-lg">🔄</span>
+            <div>
+              <div class="text-xs lg:text-sm font-bold text-zinc-900">2. Borrow & Return</div>
+              <div class="text-[11px] text-zinc-500">Take books home or return</div>
             </div>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Desk</span>
           </div>
-          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Issue, return & check rules</div>
         </button>
 
-        <button onclick="switchTab('rfid-studio-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-sm">📡</span>
-              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">RFID Studio</span>
+        <button onclick="switchTab('rfid-studio-tab')" class="sidebar-nav-btn group w-full text-left px-3.5 py-3 rounded-xl transition">
+          <div class="flex items-center gap-3">
+            <span class="text-lg">📡</span>
+            <div>
+              <div class="text-xs lg:text-sm font-bold text-zinc-900">3. Smart Tags & Doors</div>
+              <div class="text-[11px] text-zinc-500">Handheld scanner & door alarm</div>
             </div>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-semibold uppercase">Mocks</span>
           </div>
-          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Scanners, shelf audits & gates</div>
         </button>
 
-        <button onclick="switchTab('migration-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-sm">⚡</span>
-              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">20k Ingestion</span>
+        <button onclick="switchTab('migration-tab')" class="sidebar-nav-btn group w-full text-left px-3.5 py-3 rounded-xl transition">
+          <div class="flex items-center gap-3">
+            <span class="text-lg">⚡</span>
+            <div>
+              <div class="text-xs lg:text-sm font-bold text-zinc-900">4. Import 20,000 Books</div>
+              <div class="text-[11px] text-zinc-500">Load spreadsheet file</div>
             </div>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold uppercase">~20,000</span>
           </div>
-          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">Bulk spreadsheet migration</div>
         </button>
 
-        <button onclick="switchTab('interop-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-sm">🔌</span>
-              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">SIP2 & NCIP</span>
+        <button onclick="switchTab('interop-tab')" class="sidebar-nav-btn group w-full text-left px-3.5 py-3 rounded-xl transition">
+          <div class="flex items-center gap-3">
+            <span class="text-lg">🔌</span>
+            <div>
+              <div class="text-xs lg:text-sm font-bold text-zinc-900">5. Self-Checkout Test</div>
+              <div class="text-[11px] text-zinc-500">Kiosk connection test</div>
             </div>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Protocol</span>
           </div>
-          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">3M SIP2 & NCIP 2.0 frames</div>
         </button>
 
-        <button onclick="switchTab('analytics-tab')" class="sidebar-nav-btn group w-full text-left px-3 py-2.5 rounded-xl transition">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-sm">📊</span>
-              <span class="text-xs lg:text-sm font-semibold text-zinc-900 group-hover:text-zinc-950">Audit & Reports</span>
+        <button onclick="switchTab('analytics-tab')" class="sidebar-nav-btn group w-full text-left px-3.5 py-3 rounded-xl transition">
+          <div class="flex items-center gap-3">
+            <span class="text-lg">📊</span>
+            <div>
+              <div class="text-xs lg:text-sm font-bold text-zinc-900">6. History & Stats</div>
+              <div class="text-[11px] text-zinc-500">Who borrowed what & stats</div>
             </div>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 uppercase">Ledger</span>
           </div>
-          <div class="text-[11px] text-zinc-400 pl-6 mt-0.5">KPIs & immutable security log</div>
         </button>
       </nav>
     </div>
 
-    <!-- User Profile & Audio Control Footer -->
+    <!-- User Profile & Sounds Control Footer -->
     <div class="pt-4 border-t border-zinc-100 space-y-3">
-      <!-- User Profile Card -->
-      <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-50/80 border border-zinc-100">
+      <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-50 border border-zinc-100">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center text-xs font-bold" id="avatar-initials">
             LR
           </div>
           <div>
-            <div class="text-xs font-semibold text-zinc-900 leading-tight" id="desktop-user-name">Librarian Robert</div>
-            <div class="text-[10px] text-zinc-400 font-medium" id="desktop-user-role">LIBRARIAN</div>
+            <div class="text-xs font-bold text-zinc-900 leading-tight" id="desktop-user-name">Robert</div>
+            <div class="text-[10px] text-zinc-500 font-semibold uppercase" id="desktop-user-role">Librarian</div>
           </div>
         </div>
-        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-800">
-          Online
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+          Active
         </span>
       </div>
 
       <!-- Quick Audio Toggle -->
-      <div class="flex items-center justify-between text-[11px] text-zinc-500 px-1">
-        <span class="flex items-center gap-1.5">
-          <span>🔊</span> Scanner Sounds
+      <div class="flex items-center justify-between text-xs text-zinc-600 px-1">
+        <span class="flex items-center gap-1.5 font-medium">
+          <span>🔊</span> Beep Sounds
         </span>
-        <button id="audio-toggle-btn" onclick="toggleAudioMute()" class="font-mono text-[10px] px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium transition">
-          ENABLED
+        <button id="audio-toggle-btn" onclick="toggleAudioMute()" class="font-bold text-[10px] px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">
+          ON
         </button>
       </div>
     </div>
@@ -227,27 +220,27 @@
     <!-- Top Action Bar -->
     <header class="hidden md:flex items-center justify-between px-6 lg:px-8 py-3.5 bg-white border-b border-zinc-200/80 z-20 flex-shrink-0">
       <div>
-        <h2 class="text-base font-semibold text-zinc-900 tracking-tight" id="page-title">OPAC Catalog & Virtual Bookshelf</h2>
-        <p class="text-xs text-zinc-400 mt-0.5" id="page-subtitle">Real-time full-text bibliographic indexing and shelf visualizer</p>
+        <h2 class="text-base font-bold text-zinc-900 tracking-tight" id="page-title">1. Find Books (Catalog)</h2>
+        <p class="text-xs text-zinc-500 mt-0.5" id="page-subtitle">Search for any book and see if it is available on the shelf</p>
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Smart Card Tap Simulator (AC 07) -->
-        <div class="flex items-center gap-2 bg-zinc-100/80 p-1.5 pl-3 rounded-xl border border-zinc-200/60">
-          <span class="text-xs font-medium text-zinc-600 flex items-center gap-1.5">
-            <span>💳</span> Tap Smart Card:
+        <!-- Switch Who You Are -->
+        <div class="flex items-center gap-2 bg-zinc-100/80 p-1.5 pl-3 rounded-xl border border-zinc-200">
+          <span class="text-xs font-medium text-zinc-600 flex items-center gap-1">
+            <span>👤</span> Log In as:
           </span>
-          <select id="smartcard-selector" onchange="switchSmartCard(this.value)" class="text-xs font-semibold text-zinc-800 bg-white border border-zinc-200 rounded-lg py-1 px-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-900 transition">
-            <option value="CARD-LIB-7766">Librarian Robert (LIBRARIAN)</option>
-            <option value="CARD-ADM-9988">Administrator Jane (ADMIN)</option>
-            <option value="CARD-STF-5544">Staff Alice (STAFF)</option>
-            <option value="CARD-MEM-1122">Patron Emily Brown (PATRON)</option>
+          <select id="smartcard-selector" onchange="switchSmartCard(this.value)" class="text-xs font-bold text-zinc-800 bg-white border border-zinc-200 rounded-lg py-1 px-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-900 transition">
+            <option value="CARD-LIB-7766">Robert (Librarian)</option>
+            <option value="CARD-ADM-9988">Jane (Administrator)</option>
+            <option value="CARD-STF-5544">Alice (Staff Member)</option>
+            <option value="CARD-MEM-1122">Emily (Student Borrower)</option>
           </select>
         </div>
 
-        <!-- Snapshot Database Backup -->
-        <button onclick="triggerSnapshotBackup()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:text-zinc-900 transition shadow-2xs active:scale-95">
-          <span>💾</span> Snapshot DB
+        <!-- Backup Database Button -->
+        <button onclick="triggerSnapshotBackup()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-zinc-700 bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:text-zinc-900 transition shadow-2xs active:scale-95">
+          <span>💾</span> Save Backup Copy
         </button>
       </div>
     </header>
@@ -257,69 +250,73 @@
 
       <!-- ================= TAB 1: OPAC & CATALOG ================= -->
       <section id="opac-tab" class="tab-pane active space-y-6">
-        <!-- Explanatory "At a Glance" Card -->
-        <div class="p-4 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white rounded-xl border border-blue-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-          <div class="space-y-0.5">
+        <!-- Friendly Plain-English Explanation Banner -->
+        <div class="p-4 bg-blue-50/90 rounded-xl border border-blue-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-blue-900">At a Glance: What is the OPAC?</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">Public Discovery</span>
+              <span class="text-sm font-bold text-blue-950">Why do I see only a few books here?</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-200 text-blue-900">Help & Info</span>
             </div>
-            <p class="text-xs text-blue-800/80">
-              The <strong>Online Public Access Catalog</strong> is the search engine of the library. Readers can discover books, check how many copies are currently on the shelf, find their physical call numbers, and preview thermal spine labels.
+            <p class="text-xs text-blue-900 leading-relaxed">
+              <strong>1. Page by page loading:</strong> Books are shown in pages (15, 30, 50, or 100 books per page) so your screen loads quickly without freezing. Use the <strong>« Previous</strong> and <strong>Next »</strong> buttons at the bottom to browse through all books!<br>
+              <strong>2. Want the full 20,000 collection?</strong> Right now, your library has starter books loaded. Click the green button on the right to import all <strong>20,000 books</strong> from the spreadsheet in just 2 seconds!
             </p>
           </div>
-          <div class="flex gap-2 flex-shrink-0">
-            <button onclick="quickSearch('Algorithms')" class="px-3 py-1.5 text-xs font-semibold bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-lg transition shadow-2xs">
-              ⚡ Try "Algorithms"
-            </button>
-            <button onclick="quickSearch('Literature')" class="px-3 py-1.5 text-xs font-semibold bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 rounded-lg transition shadow-2xs">
-              ⚡ Try "Literature"
+
+          <!-- Quick Load 20k Button right here! -->
+          <div class="flex gap-2 flex-shrink-0 items-center">
+            <button onclick="switchTab('migration-tab')" class="px-3.5 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-sm flex items-center gap-1.5 active:scale-95">
+              <span>⚡</span> Load 20,000 Books
             </button>
           </div>
         </div>
 
-        <!-- Search Bar & Category Filters -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+        <!-- Search Bar & Filters -->
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-8 lg:col-span-9 relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg class="h-4 w-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
+                🔍
               </div>
-              <input type="text" id="opac-search-input" onkeyup="if(event.key==='Enter') searchCatalog()" placeholder="Search title, author, keyword or ISBN..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition placeholder:text-zinc-400">
+              <input type="text" id="opac-search-input" onkeyup="if(event.key==='Enter') { currentCatalogPage = 1; searchCatalog(); }" placeholder="Type book title, author, or book number..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition placeholder:text-zinc-400">
             </div>
 
             <div class="sm:col-span-4 lg:col-span-3 flex gap-2">
-              <select id="opac-cat-filter" onchange="searchCatalog()" class="w-full text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition font-medium text-zinc-700">
-                <option value="">All Categories</option>
+              <select id="opac-cat-filter" onchange="currentCatalogPage = 1; searchCatalog();" class="w-full text-xs lg:text-sm bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition font-medium text-zinc-700">
+                <option value="">All Topics</option>
                 <option value="Computer Science">Computer Science</option>
                 <option value="Literature">Literature</option>
-                <option value="Reference">Reference</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="History">History</option>
+                <option value="Medicine">Medicine</option>
+                <option value="Reference">Library Reading Only</option>
               </select>
-              <button onclick="searchCatalog()" class="px-4 py-2.5 text-xs lg:text-sm font-medium bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm active:scale-95 flex-shrink-0">
+              <button onclick="currentCatalogPage = 1; searchCatalog();" class="px-5 py-2.5 text-xs lg:text-sm font-bold bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm active:scale-95 flex-shrink-0">
                 Search
               </button>
             </div>
           </div>
 
           <!-- Quick Discovery Pills -->
-          <div class="flex items-center gap-2 pt-1 overflow-x-auto text-xs text-zinc-500">
-            <span class="font-medium text-zinc-400 text-[11px] uppercase tracking-wider">Quick Filters:</span>
-            <button onclick="quickSearch('Computer Science')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Computer Science</button>
-            <button onclick="quickSearch('Literature')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Literature</button>
-            <button onclick="quickSearch('Algorithms')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Algorithms</button>
-            <button onclick="quickSearch('Kernighan')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">C Programming</button>
-            <button onclick="quickSearch('')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Show All</button>
+          <div class="flex items-center gap-2 pt-1 overflow-x-auto text-xs text-zinc-600">
+            <span class="font-semibold text-zinc-400 text-[11px] uppercase tracking-wider flex-shrink-0">Quick Searches:</span>
+            <button onclick="quickSearch('')" class="px-2.5 py-1 rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-900 font-bold transition flex-shrink-0">Show All Books</button>
+            <button onclick="quickSearch('Computer Science')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition flex-shrink-0">Computer Science</button>
+            <button onclick="quickSearch('Algorithms')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition flex-shrink-0">Algorithms</button>
+            <button onclick="quickSearch('Literature')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition flex-shrink-0">Literature</button>
+            <button onclick="quickSearch('1984')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition flex-shrink-0">George Orwell 1984</button>
           </div>
         </div>
 
-        <!-- Virtual Bookshelf (Visual Tactile Representation) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-3">
+        <!-- Visual Bookshelf -->
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-3">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-semibold text-zinc-900">Virtual Bookshelf — <code class="text-xs bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-700 font-mono">SHELF-CS-01</code></h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Click any book spine below to inspect its live RFID EPC tag and loan status.</p>
+              <h3 class="text-sm font-bold text-zinc-900">Virtual Bookshelf — Looking at Shelf: <code class="text-xs bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-800 font-mono font-bold">SHELF-CS-01</code></h3>
+              <p class="text-xs text-zinc-500 mt-0.5">Click any book spine to see its details and check its anti-theft smart tag!</p>
             </div>
-            <span class="text-xs text-zinc-400 font-mono">Tactile 3D Shelf</span>
+            <span class="text-xs font-semibold text-zinc-400">Interactive Shelf</span>
           </div>
 
           <!-- Bookshelf Visualizer -->
@@ -328,26 +325,39 @@
           </div>
         </div>
 
-        <!-- Search Results Table -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-2xs">
-          <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-              Catalog Titles (<span id="results-count" class="text-zinc-900 font-mono">0</span> Found)
-            </h3>
-            <span class="text-xs text-zinc-400">Live inventory tracking</span>
+        <!-- Search Results Table with Pagination -->
+        <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-2xs">
+          <div class="px-5 py-4 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-zinc-50">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-700">
+                Total Books in Library: <span id="results-count" class="text-zinc-950 font-bold text-sm font-mono">0</span>
+              </h3>
+              <p class="text-[11px] text-zinc-500 mt-0.5" id="pagination-info">Showing books 1 to 30</p>
+            </div>
+
+            <!-- Page Size Selector -->
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-zinc-600 font-medium">Show per page:</span>
+              <select id="catalog-page-size" onchange="changePageSize(this.value)" class="text-xs font-bold bg-white border border-zinc-300 rounded-md py-1 px-2.5 text-zinc-800 focus:outline-none">
+                <option value="15">15 books</option>
+                <option value="30" selected>30 books</option>
+                <option value="50">50 books</option>
+                <option value="100">100 books</option>
+              </select>
+            </div>
           </div>
 
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-              <thead class="bg-zinc-50/80 text-zinc-500 border-b border-zinc-100 font-medium">
+              <thead class="bg-zinc-100/90 text-zinc-700 border-b border-zinc-200 font-bold">
                 <tr>
-                  <th class="py-3 px-4">ISBN</th>
-                  <th class="py-3 px-4">Title</th>
+                  <th class="py-3 px-4">Book Number (ISBN)</th>
+                  <th class="py-3 px-4">Book Title</th>
                   <th class="py-3 px-4">Author</th>
-                  <th class="py-3 px-4">Category</th>
-                  <th class="py-3 px-4">Call Number</th>
-                  <th class="py-3 px-4">Available Copies</th>
-                  <th class="py-3 px-4 text-right">Spine Sticker</th>
+                  <th class="py-3 px-4">Topic</th>
+                  <th class="py-3 px-4">Shelf Number</th>
+                  <th class="py-3 px-4">Can I Borrow It?</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody id="catalog-results-body" class="divide-y divide-zinc-100 text-zinc-700">
@@ -355,70 +365,90 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Pagination Bar -->
+          <div class="px-5 py-3.5 border-t border-zinc-200 bg-zinc-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <button id="btn-first-page" onclick="firstCatalogPage()" class="px-3 py-1.5 text-xs font-bold bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-100 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                &laquo; First
+              </button>
+              <button id="btn-prev-page" onclick="prevCatalogPage()" class="px-3.5 py-1.5 text-xs font-bold bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-100 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                &larr; Previous Page
+              </button>
+            </div>
+
+            <div class="text-xs text-zinc-700 font-medium text-center">
+              Page <strong id="current-page-num" class="text-zinc-900 font-bold">1</strong> of <strong id="total-pages-num" class="text-zinc-900 font-bold">1</strong>
+            </div>
+
+            <div class="flex items-center gap-2 justify-end">
+              <button id="btn-next-page" onclick="nextCatalogPage()" class="px-3.5 py-1.5 text-xs font-bold bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-100 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                Next Page &rarr;
+              </button>
+              <button id="btn-last-page" onclick="lastCatalogPage()" class="px-3 py-1.5 text-xs font-bold bg-white border border-zinc-300 text-zinc-700 hover:bg-zinc-100 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+                Last &raquo;
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- ================= TAB 2: CIRCULATION DESK ================= -->
       <section id="circulation-tab" class="tab-pane space-y-6">
-        <!-- Explanatory "At a Glance" Card -->
-        <div class="p-4 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-white rounded-xl border border-emerald-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-          <div class="space-y-0.5">
+        <!-- Simple Explainer Box -->
+        <div class="p-4 bg-emerald-50/90 rounded-xl border border-emerald-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-emerald-900">At a Glance: What is the Circulation Desk?</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-700">Lending & Security</span>
+              <span class="text-sm font-bold text-emerald-950">How borrowing & returning works:</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200 text-emerald-900">Easy Step-by-Step</span>
             </div>
-            <p class="text-xs text-emerald-800/80">
-              This is where books are issued, returned, and renewed. <strong>Notice the RFID connection:</strong> when you issue a book, its RFID tag security bit is <strong>disarmed (0)</strong> so it won't alarm the security gate. When returned, it is <strong>re-armed (1)</strong> to protect against theft.
+            <p class="text-xs text-emerald-900 leading-relaxed">
+              <strong>• When you borrow:</strong> The system automatically turns the book's theft alarm <strong>OFF</strong> so the student can walk outside peacefully.<br>
+              <strong>• When returned:</strong> It turns the theft alarm back <strong>ON</strong> to protect it, and checks for late fees ($0.50 per day).
             </p>
           </div>
           <div class="flex gap-2 flex-shrink-0">
-            <button onclick="fillCirculationForm('MEM-101', 'ACC-10001')" class="px-3 py-1.5 text-xs font-semibold bg-white border border-emerald-200 text-emerald-700 hover:bg-emerald-50 rounded-lg transition shadow-2xs">
-              ⚡ Fill Normal Loan
+            <button onclick="resetSampleBooks()" class="px-3 py-1.5 text-xs font-bold bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-50 rounded-lg transition shadow-2xs">
+              🔄 Reset Sample Books
             </button>
           </div>
         </div>
 
-        <!-- Interactive Desk Workstation -->
+        <!-- Workstation -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Check-Out Box -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                <h3 class="text-sm font-semibold text-zinc-900">Step 1: Check-Out (Issue Book)</h3>
+                <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                <h3 class="text-sm font-bold text-zinc-900">Step 1: Borrow a Book (Take Home)</h3>
               </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold">SETS SECURITY BIT = 0</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">TURNS ALARM OFF</span>
             </div>
 
             <div class="space-y-3">
               <div>
-                <div class="flex items-center justify-between mb-1">
-                  <label class="text-xs font-medium text-zinc-700">Patron Card / Member Code</label>
-                  <span class="text-[11px] text-zinc-400">e.g. MEM-101</span>
-                </div>
-                <input type="text" id="circ-patron-code" value="MEM-101" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Student Library Card Number</label>
+                <input type="text" id="circ-patron-code" value="MEM-101" class="w-full px-3 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
               </div>
 
               <div>
-                <div class="flex items-center justify-between mb-1">
-                  <label class="text-xs font-medium text-zinc-700">Book Accession Number or RFID EPC</label>
-                  <span class="text-[11px] text-zinc-400">e.g. ACC-10001</span>
-                </div>
-                <input type="text" id="circ-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Book Barcode Number</label>
+                <input type="text" id="circ-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
               </div>
 
               <!-- Quick Demo Fill Pills -->
               <div class="flex flex-wrap gap-1.5 pt-1 text-[11px]">
-                <span class="text-zinc-400 font-medium py-0.5">Quick Autofill:</span>
-                <button onclick="fillCirculationForm('MEM-101', 'ACC-10001')" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">Normal Loan</button>
-                <button onclick="fillCirculationForm('MEM-102', 'ACC-10001')" class="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-800">Fine Limit Test</button>
-                <button onclick="fillCirculationForm('MEM-103', 'ACC-10001')" class="px-2 py-0.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-800">Suspended Patron</button>
-                <button onclick="fillCirculationForm('MEM-101', 'ACC-10008')" class="px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-800">Reference Book</button>
+                <span class="text-zinc-500 font-bold py-0.5">Quick Try:</span>
+                <button onclick="fillCirculationForm('MEM-101', 'ACC-10001')" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold">Normal Loan (Book 1)</button>
+                <button onclick="fillCirculationForm('MEM-101', 'ACC-10002')" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold">Normal Loan (Book 2)</button>
+                <button onclick="fillCirculationForm('MEM-102', 'ACC-10001')" class="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold">Owes $25 Late Fee</button>
+                <button onclick="fillCirculationForm('MEM-103', 'ACC-10001')" class="px-2 py-0.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-900 font-semibold">Blocked Student</button>
+                <button onclick="fillCirculationForm('MEM-101', 'ACC-10008')" class="px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold">Reference Book</button>
               </div>
 
-              <button onclick="executeCheckout()" class="w-full py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 text-white text-xs lg:text-sm font-semibold rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                Issue Book & Disarm RFID Security
+              <button onclick="executeCheckout()" class="w-full py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 text-white text-xs lg:text-sm font-bold rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
+                Borrow Book & Turn Alarm Off
               </button>
 
               <div id="checkout-feedback"></div>
@@ -426,35 +456,34 @@
           </div>
 
           <!-- Check-In Box -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <h3 class="text-sm font-semibold text-zinc-900">Step 2: Check-In (Return Book)</h3>
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                <h3 class="text-sm font-bold text-zinc-900">Step 2: Return a Book (Put Back)</h3>
               </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold">RE-ARMS SECURITY BIT = 1</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">TURNS ALARM ON</span>
             </div>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">Returned Item Accession Number</label>
-                <input type="text" id="checkin-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Book Barcode Number to Return</label>
+                <input type="text" id="checkin-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
               </div>
 
-              <button onclick="executeCheckin()" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs lg:text-sm font-semibold rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                Return Book & Re-Arm Security
+              <button onclick="executeCheckin()" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs lg:text-sm font-bold rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
+                Return Book & Re-Arm Alarm
               </button>
 
               <div id="checkin-feedback"></div>
 
               <!-- Quick Renewal Accordion/Section -->
               <div class="pt-3 border-t border-zinc-100 space-y-2">
-                <span class="text-xs font-medium text-zinc-700 block">Extend Lending Period (Renewal):</span>
+                <span class="text-xs font-bold text-zinc-700 block">Want to keep the book longer?</span>
                 <div class="flex gap-2">
-                  <input type="text" id="renew-item-id" value="ACC-10001" placeholder="Item accession" class="flex-1 px-3 py-1.5 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
-                  <button onclick="executeRenewal()" class="px-3.5 py-1.5 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition">
-                    Renew (+14 Days)
+                  <input type="text" id="renew-item-id" value="ACC-10001" placeholder="Book barcode" class="flex-1 px-3 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded-lg font-mono">
+                  <button onclick="executeRenewal()" class="px-3.5 py-1.5 text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-lg transition">
+                    Keep for +14 More Days
                   </button>
                 </div>
                 <div id="renew-feedback" class="text-xs"></div>
@@ -463,36 +492,36 @@
           </div>
         </div>
 
-        <!-- Policy Invariants Barrier Test (AC 04) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-3">
+        <!-- Simple Rules Test -->
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-3">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-semibold text-zinc-900">1-Click Policy Barrier Simulators (AC 04 Requirements)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Click any card below to test how the system automatically blocks invalid borrowing:</p>
+              <h3 class="text-sm font-bold text-zinc-900">Test Automatic Safety Rules</h3>
+              <p class="text-xs text-zinc-500 mt-0.5">Click any rule to see how the system stops mistakes:</p>
             </div>
-            <span class="text-xs font-mono text-zinc-400">Strict Invariants</span>
+            <span class="text-xs font-semibold text-zinc-400">Rules Protection</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <button onclick="simulateConstraintTest('FINE_LIMIT')" class="p-3.5 text-left border border-zinc-200/80 rounded-xl hover:border-amber-300 hover:bg-amber-50/40 transition group shadow-2xs">
-              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-amber-900 flex items-center gap-1.5">
-                <span>⚠️</span> 1. Fine Limit Barrier
+            <button onclick="simulateConstraintTest('FINE_LIMIT')" class="p-3.5 text-left border border-zinc-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 transition group">
+              <span class="block text-xs font-bold text-zinc-900 group-hover:text-amber-950 flex items-center gap-1.5">
+                <span>⚠️</span> Rule 1: High Late Fee ($15+)
               </span>
-              <span class="block text-[11px] text-zinc-500 mt-1">Patron MEM-102 owes $25.50 (Exceeds $15 limit) &rarr; Checkout blocked.</span>
+              <span class="block text-[11px] text-zinc-500 mt-1">Student MEM-102 owes $25.50 &rarr; System blocks them from taking books.</span>
             </button>
 
-            <button onclick="simulateConstraintTest('MEMBER_BLOCKED')" class="p-3.5 text-left border border-zinc-200/80 rounded-xl hover:border-rose-300 hover:bg-rose-50/40 transition group shadow-2xs">
-              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-rose-900 flex items-center gap-1.5">
-                <span>🚫</span> 2. Suspended Patron
+            <button onclick="simulateConstraintTest('MEMBER_BLOCKED')" class="p-3.5 text-left border border-zinc-200 rounded-xl hover:border-rose-300 hover:bg-rose-50/50 transition group">
+              <span class="block text-xs font-bold text-zinc-900 group-hover:text-rose-950 flex items-center gap-1.5">
+                <span>🚫</span> Rule 2: Blocked Student Card
               </span>
-              <span class="block text-[11px] text-zinc-500 mt-1">Patron MEM-103 is marked suspended &rarr; Borrowing denied.</span>
+              <span class="block text-[11px] text-zinc-500 mt-1">Student MEM-103 card is blocked &rarr; System stops checkout.</span>
             </button>
 
-            <button onclick="simulateConstraintTest('REFERENCE_ONLY')" class="p-3.5 text-left border border-zinc-200/80 rounded-xl hover:border-blue-300 hover:bg-blue-50/40 transition group shadow-2xs">
-              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-blue-900 flex items-center gap-1.5">
-                <span>🔒</span> 3. Reference Only Book
+            <button onclick="simulateConstraintTest('REFERENCE_ONLY')" class="p-3.5 text-left border border-zinc-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 transition group">
+              <span class="block text-xs font-bold text-zinc-900 group-hover:text-blue-950 flex items-center gap-1.5">
+                <span>🔒</span> Rule 3: Library Use Only Book
               </span>
-              <span class="block text-[11px] text-zinc-500 mt-1">Book ACC-10008 is a reference dictionary &rarr; Cannot leave library.</span>
+              <span class="block text-[11px] text-zinc-500 mt-1">Dictionary ACC-10008 is for library reading only &rarr; Cannot take home.</span>
             </button>
           </div>
         </div>
@@ -500,44 +529,52 @@
 
       <!-- ================= TAB 3: RFID STUDIO ================= -->
       <section id="rfid-studio-tab" class="tab-pane space-y-6">
-        <!-- Explanatory "At a Glance" Card -->
-        <div class="p-4 bg-gradient-to-r from-indigo-50/70 via-purple-50/40 to-white rounded-xl border border-indigo-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-          <div class="space-y-0.5">
+        <!-- Simple Explainer Box -->
+        <div class="p-4 bg-indigo-50/90 rounded-xl border border-indigo-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-indigo-900">At a Glance: What is the RFID Studio?</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-100 text-indigo-700">Hardware Simulator</span>
+              <span class="text-sm font-bold text-indigo-950">How the smart hardware works:</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-200 text-indigo-900">Hardware Test Lab</span>
             </div>
-            <p class="text-xs text-indigo-800/80">
-              This lab simulates the 3 main RFID devices in a library: <strong>(1) Staff Station</strong> to link RFID tags to books, <strong>(2) Handheld Scanner</strong> to audit shelves for misplaced books, and <strong>(3) Security Gates</strong> that catch unissued books with alarms and simulated CCTV snapshots.
+            <p class="text-xs text-indigo-900 leading-relaxed">
+              Every book has a small <strong>smart tag sticker</strong> inside. Here you can link tags to books, test the handheld scanner wand that beeps when books are misplaced, and test exit security doors with cameras.
             </p>
           </div>
         </div>
 
         <!-- 1. Staff Station Tagging -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">1</span>
-                <h3 class="text-sm font-semibold text-zinc-900">Staff RFID Tag Encoding Station (AC 02, FR 05)</h3>
+                <span class="w-6 h-6 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">1</span>
+                <h3 class="text-sm font-bold text-zinc-900">Librarian Desk: Put Smart Tag on a Book</h3>
               </div>
-              <p class="text-xs text-zinc-400 mt-0.5 pl-7">Validate catalog record and burn/pair an Electronic Product Code (EPC Gen2) tag</p>
+              <p class="text-xs text-zinc-500 mt-0.5 pl-8">Pairs a smart tag sticker to a book so the computer knows which book it is</p>
             </div>
-            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">DESK-READER-01</span>
+            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">Tag Writer</span>
+          </div>
+
+          <!-- Quick Try Pills -->
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-zinc-500 font-bold">Quick Fill:</span>
+            <button onclick="document.getElementById('tag-accession').value='ACC-10002'; document.getElementById('tag-epc').value='E280110520000099';" class="px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium">Book 2 (ACC-10002)</button>
+            <button onclick="document.getElementById('tag-accession').value='ACC-10003'; document.getElementById('tag-epc').value='E280110520000088';" class="px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium">Book 3 (ACC-10003)</button>
+            <button onclick="document.getElementById('tag-accession').value='ACC-10004'; document.getElementById('tag-epc').value='E280110520000077';" class="px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium">Book 4 (ACC-10004)</button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-4">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Accession Barcode</label>
-              <input type="text" id="tag-accession" value="ACC-10002" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+              <label class="block text-xs font-bold text-zinc-700 mb-1">Book Barcode Number</label>
+              <input type="text" id="tag-accession" value="ACC-10002" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-5">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">RFID EPC (16-32 Hex Characters)</label>
-              <input type="text" id="tag-epc" value="E280110520000099" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+              <label class="block text-xs font-bold text-zinc-700 mb-1">Smart Tag ID Number</label>
+              <input type="text" id="tag-epc" value="E280110520000099" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-3 flex items-end">
-              <button onclick="executeTagAssociation()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
-                Pair & Lock Tag
+              <button onclick="executeTagAssociation()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm active:scale-95">
+                Save & Link Tag
               </button>
             </div>
           </div>
@@ -545,41 +582,41 @@
         </div>
 
         <!-- 2. Handheld Scanner (Audible & Visual Cues) -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">2</span>
-                <h3 class="text-sm font-semibold text-zinc-900">Handheld Shelf Inventory Auditor (AC 05, FR 06)</h3>
+                <span class="w-6 h-6 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">2</span>
+                <h3 class="text-sm font-bold text-zinc-900">Handheld Wand: Scan Books on Shelf</h3>
               </div>
-              <p class="text-xs text-zinc-400 mt-0.5 pl-7">Simulate walking the stacks with an RFID wand. Catches missing and misplaced books with audio beeps.</p>
+              <p class="text-xs text-zinc-500 mt-0.5 pl-8">Wave the wand past the books. It makes a happy chime for correct books, and double-beeps if a book was put on the wrong shelf!</p>
             </div>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 text-indigo-700">Audio Synthesizer Active</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">Sound Enabled</span>
           </div>
 
           <!-- Quick Try Buttons -->
-          <div class="flex items-center gap-2 text-xs">
-            <span class="text-zinc-400 font-medium">Quick Scenarios:</span>
-            <button onclick="fillHandheldScan('SHELF-CS-01', 'E280110520000001, E280110520000002, E280110520000003')" class="px-2.5 py-1 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium">
-              ⚡ Perfect Shelf (All Correct)
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="text-zinc-500 font-bold">Try an example:</span>
+            <button onclick="fillHandheldScan('SHELF-CS-01', 'E280110520000001, E280110520000002, E280110520000003')" class="px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">
+              🟢 All Books on Right Shelf (Happy Chime)
             </button>
-            <button onclick="fillHandheldScan('SHELF-CS-01', 'E280110520000001, E280110520000006')" class="px-2.5 py-1 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 font-medium">
-              ⚠️ Misplaced Book (Belongs in Literature)
+            <button onclick="fillHandheldScan('SHELF-CS-01', 'E280110520000001, E280110520000006')" class="px-2.5 py-1 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold border border-rose-200">
+              ⚠️ Book on Wrong Shelf (Warning Beep)
             </button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-3">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Audited Shelf ID</label>
-              <input type="text" id="handheld-shelf" value="SHELF-CS-01" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+              <label class="block text-xs font-bold text-zinc-700 mb-1">Which Shelf Are You At?</label>
+              <input type="text" id="handheld-shelf" value="SHELF-CS-01" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-6">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Scanned EPCs (Comma-separated)</label>
-              <input type="text" id="handheld-epcs" value="E280110520000001, E280110520000006" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+              <label class="block text-xs font-bold text-zinc-700 mb-1">Scanned Smart Tag IDs</label>
+              <input type="text" id="handheld-epcs" value="E280110520000001, E280110520000006" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-3 flex items-end">
-              <button onclick="executeHandheldScan()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
-                Simulate Shelf Sweep
+              <button onclick="executeHandheldScan()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm active:scale-95">
+                Scan Shelf Now
               </button>
             </div>
           </div>
@@ -587,56 +624,59 @@
         </div>
 
         <!-- 3. Security Gate Portal & CCTV Alarm Simulator -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">3</span>
-                <h3 class="text-sm font-semibold text-zinc-900">Security Gate Portal & CCTV Alarm (AC 06, FR 07)</h3>
+                <span class="w-6 h-6 rounded-md bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">3</span>
+                <h3 class="text-sm font-bold text-zinc-900">Exit Security Door & Camera Alarm</h3>
               </div>
-              <p class="text-xs text-zinc-400 mt-0.5 pl-7">Reads RFID security bit offline. Sounds emergency siren, grabs CCTV photo & queues security email.</p>
+              <p class="text-xs text-zinc-500 mt-0.5 pl-8">If someone leaves with an unborrowed book, the siren sounds & camera takes a photo</p>
             </div>
-            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">GATE-MAIN-01</span>
+            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">Door Gate 1</span>
           </div>
 
           <!-- Quick Try Buttons -->
-          <div class="flex items-center gap-2 text-xs">
-            <span class="text-zinc-400 font-medium">Quick Test:</span>
-            <button onclick="document.getElementById('gate-passing-epcs').value = 'E280110520000001'; executeGatePassage()" class="px-2.5 py-1 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 font-medium">
-              🚨 Trigger Security Breach (Unissued Book)
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="text-zinc-500 font-bold">Test both situations:</span>
+            <button onclick="document.getElementById('gate-passing-epcs').value = 'E280110520000001'; executeGatePassage()" class="px-3 py-1.5 rounded-md bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold border border-rose-300">
+              🚨 Test Theft: Walk Out with Unborrowed Book (Hear Siren!)
+            </button>
+            <button onclick="testSafeExit()" class="px-3 py-1.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold border border-emerald-300">
+              🟢 Test Safe Exit: Walk Out with Borrowed Book (No Siren)
             </button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-3">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Gate Portal ID</label>
+              <label class="block text-xs font-bold text-zinc-700 mb-1">Exit Gate Door</label>
               <input type="text" id="gate-portal-id" value="GATE-MAIN-01" readonly class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-100 text-zinc-500 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-6">
-              <label class="block text-xs font-medium text-zinc-700 mb-1">Passing Tag EPC (ACC-10001 tag has Security Bit = 1)</label>
-              <input type="text" id="gate-passing-epcs" value="E280110520000001" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+              <label class="block text-xs font-bold text-zinc-700 mb-1">Tag passing through the door</label>
+              <input type="text" id="gate-passing-epcs" value="E280110520000001" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50 border border-zinc-200 rounded-lg font-mono">
             </div>
             <div class="sm:col-span-3 flex items-end">
-              <button onclick="executeGatePassage()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition shadow-sm">
-                Pass Through Gate
+              <button onclick="executeGatePassage()" class="w-full py-2.5 px-3 text-xs lg:text-sm font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm active:scale-95">
+                Walk Through Door
               </button>
             </div>
           </div>
 
           <!-- Gate Breach Alarm Card (Hidden until triggered) -->
-          <div id="gate-alarm-banner" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-5 space-y-4 animate-pulse">
-            <div class="flex items-center gap-2 text-rose-700 font-semibold text-sm">
-              <span class="w-3 h-3 rounded-full bg-rose-600"></span>
-              SECURITY BREACH: UNAUTHORISED BOOK DETECTED AT EXIT!
+          <div id="gate-alarm-banner" class="hidden bg-rose-50 border-2 border-rose-300 rounded-xl p-5 space-y-4">
+            <div class="flex items-center gap-2 text-rose-800 font-bold text-sm">
+              <span class="w-3.5 h-3.5 rounded-full bg-rose-600 animate-ping"></span>
+              THEFT ALARM: SOMEONE IS WALKING OUT WITH AN UNBORROWED BOOK!
             </div>
-            <p id="gate-alarm-details" class="text-xs text-rose-800"></p>
+            <p id="gate-alarm-details" class="text-xs text-rose-900"></p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-white/80 p-3 rounded-lg border border-rose-100">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-white p-3 rounded-lg border border-rose-200">
               <div>
-                <span class="text-[11px] font-medium text-zinc-500 block mb-1">Simulated CCTV Forensic Frame:</span>
+                <span class="text-[11px] font-bold text-zinc-700 block mb-1">Security Camera Photo:</span>
                 <canvas id="cctv-canvas" width="240" height="135" class="rounded border border-zinc-300 shadow-sm bg-black"></canvas>
               </div>
-              <div id="gate-email-notice" class="text-xs text-zinc-600 space-y-1">
+              <div id="gate-email-notice" class="text-xs text-zinc-700 space-y-1">
                 <!-- Dispatched alert info -->
               </div>
             </div>
@@ -646,110 +686,126 @@
 
       <!-- ================= TAB 4: BULK MIGRATION ================= -->
       <section id="migration-tab" class="tab-pane space-y-6">
-        <!-- Explanatory "At a Glance" Card -->
-        <div class="p-4 bg-gradient-to-r from-amber-50/70 via-orange-50/40 to-white rounded-xl border border-amber-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-          <div class="space-y-0.5">
+        <!-- Simple Explainer Box -->
+        <div class="p-4 bg-amber-50/90 rounded-xl border border-amber-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-amber-900">At a Glance: What is 20k Bulk Ingestion?</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800">Legacy Migration</span>
+              <span class="text-sm font-bold text-amber-950">How spreadsheet import works:</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900">Spreadsheet Loader</span>
             </div>
-            <p class="text-xs text-amber-800/80">
-              Imports legacy spreadsheets (~20,000 records) safely into the library database. It uses an <strong>isolated staging table</strong> so live data is never corrupted, rejects malformed/duplicate rows, reconciles counts, and provides an instant <strong>undo button (atomic rollback)</strong>.
+            <p class="text-xs text-amber-900 leading-relaxed">
+              This tool loads <strong>20,000 books</strong> from a spreadsheet file directly into the library in under 3 seconds! It checks for duplicate numbers, stops errors, and includes an <strong>Undo</strong> button to remove the books if needed.
             </p>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-5">
+        <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-5">
           <div>
-            <h3 class="text-sm font-semibold text-zinc-900">Step-by-Step Data Migration Engine (FR 10, AC 01)</h3>
-            <p class="text-xs text-zinc-400 mt-0.5">Follow the 3 sequential steps below to demonstrate safe high-throughput ingestion:</p>
+            <h3 class="text-sm font-bold text-zinc-900">Easy 3-Step Import Process:</h3>
+            <p class="text-xs text-zinc-500 mt-0.5">Click the 3 buttons in order to import the entire 20,000 book collection:</p>
           </div>
 
           <!-- 3-Step Process Cards -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 space-y-2">
-              <div class="text-xs font-bold text-zinc-700 flex items-center gap-1.5">
-                <span class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px]">1</span>
-                Prepare Dataset
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50 space-y-2.5">
+              <div class="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+                <span class="w-6 h-6 rounded-full bg-zinc-200 text-zinc-900 flex items-center justify-center text-xs font-bold">1</span>
+                Prepare Spreadsheet File
               </div>
-              <p class="text-[11px] text-zinc-500">Generates 20,000 realistic records with intentional duplicate and malformed test rows.</p>
-              <button onclick="generateSyntheticDataset()" class="w-full py-2 px-3 text-xs font-semibold bg-white border border-zinc-300 hover:bg-zinc-50 text-zinc-800 rounded-lg transition shadow-2xs">
-                ⚙️ Generate 20k File
+              <p class="text-[11px] text-zinc-500">Checks the 20,000-book file on disk with titles, authors, and barcodes.</p>
+              <button onclick="generateSyntheticDataset()" class="w-full py-2.5 px-3 text-xs font-bold bg-white border border-zinc-300 hover:bg-zinc-100 text-zinc-800 rounded-lg transition shadow-2xs active:scale-95">
+                ⚙️ Check 20,000 File
+              </button>
+              <div id="step1-status" class="text-[11px] text-zinc-600"></div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50 space-y-2.5">
+              <div class="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+                <span class="w-6 h-6 rounded-full bg-zinc-200 text-zinc-900 flex items-center justify-center text-xs font-bold">2</span>
+                Safe Test (Check for Errors)
+              </div>
+              <p class="text-[11px] text-zinc-500">Checks for duplicates and missing titles without saving anything into the library.</p>
+              <button onclick="runMigrationTest(true)" class="w-full py-2.5 px-3 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-2xs active:scale-95">
+                🧪 Run Safe Test
               </button>
             </div>
 
-            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 space-y-2">
-              <div class="text-xs font-bold text-zinc-700 flex items-center gap-1.5">
-                <span class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px]">2</span>
-                Dry-Run Validation
+            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50 space-y-2.5">
+              <div class="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+                <span class="w-6 h-6 rounded-full bg-zinc-200 text-zinc-900 flex items-center justify-center text-xs font-bold">3</span>
+                Add to Library Catalog
               </div>
-              <p class="text-[11px] text-zinc-500">Performs full pre-validation & duplicate checks in memory without modifying the database.</p>
-              <button onclick="runMigrationTest(true)" class="w-full py-2 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-2xs">
-                🧪 Run Dry-Run (Safe)
-              </button>
-            </div>
-
-            <div class="p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 space-y-2">
-              <div class="text-xs font-bold text-zinc-700 flex items-center gap-1.5">
-                <span class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px]">3</span>
-                Live Ingestion
-              </div>
-              <p class="text-[11px] text-zinc-500">Atomically writes records into catalog and proves reconciliation balance.</p>
-              <button onclick="runMigrationTest(false)" class="w-full py-2 px-3 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-2xs">
-                🚀 Live Migration
+              <p class="text-[11px] text-zinc-500">Saves the books so they immediately show up in the "Find Books" search.</p>
+              <button onclick="runMigrationTest(false)" class="w-full py-2.5 px-3 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-2xs active:scale-95">
+                🚀 Add Books to Library
               </button>
             </div>
           </div>
 
+          <!-- Migration Status Output -->
           <div id="migration-status-box" class="hidden"></div>
+
+          <!-- Optional Custom File Upload Accordion -->
+          <div class="pt-4 border-t border-zinc-100 space-y-2">
+            <span class="text-xs font-bold text-zinc-700 block">Want to upload your own custom spreadsheet?</span>
+            <div class="flex flex-col sm:flex-row items-center gap-2">
+              <input type="file" id="custom-csv-file" accept=".csv" class="text-xs text-zinc-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-zinc-100 file:text-zinc-800 hover:file:bg-zinc-200 w-full sm:w-auto">
+              <button onclick="uploadCustomCsv(true)" class="w-full sm:w-auto px-3.5 py-1.5 text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition">
+                Test Custom File
+              </button>
+              <button onclick="uploadCustomCsv(false)" class="w-full sm:w-auto px-3.5 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition">
+                Upload Custom File
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- ================= TAB 5: SIP2 & NCIP INTEROP ================= -->
       <section id="interop-tab" class="tab-pane space-y-6">
-        <!-- Explanatory "At a Glance" Card -->
-        <div class="p-4 bg-gradient-to-r from-purple-50/70 via-indigo-50/40 to-white rounded-xl border border-purple-100/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-          <div class="space-y-0.5">
+        <!-- Simple Explainer Box -->
+        <div class="p-4 bg-purple-50/90 rounded-xl border border-purple-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-purple-900">At a Glance: What is SIP2 & NCIP?</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-100 text-purple-800">Industry Standards</span>
+              <span class="text-sm font-bold text-purple-950">Self-Checkout Machine Simulator:</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-200 text-purple-900">Machine Talking</span>
             </div>
-            <p class="text-xs text-purple-800/80">
-              <strong>SIP2</strong> (3M Standard Interchange Protocol) and <strong>NCIP 2.0</strong> are the universal protocols libraries use to communicate with self-checkout kiosks, automated book sorters, and external ILMS systems.
+            <p class="text-xs text-purple-900 leading-relaxed">
+              When a library buys a self-checkout kiosk or an automatic book return machine, the machine talks to this library software using a standard language called <strong>SIP2</strong>. You can test machine messages below.
             </p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- SIP2 Adapter -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div>
-                <h3 class="text-sm font-semibold text-zinc-900">3M SIP2 Protocol Adapter (AC 03)</h3>
-                <p class="text-xs text-zinc-400 mt-0.5">Dispatches standard delimited socket frames</p>
+                <h3 class="text-sm font-bold text-zinc-900">Standard Self-Checkout Machine Test</h3>
+                <p class="text-xs text-zinc-500 mt-0.5">Sends standard messages between machines</p>
               </div>
-              <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">RFC SIP2</span>
+              <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">SIP2</span>
             </div>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">Preset Command Frame</label>
-                <select id="sip2-preset" onchange="document.getElementById('sip2-raw').value = this.value" class="w-full px-3 py-2 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg text-zinc-700 font-mono">
-                  <option value="9300CNadmin|COpassword|">93 - Login Request</option>
-                  <option value="1120240101    120000ABACC-10001|">11 - Item Information (ACC-10001)</option>
-                  <option value="17N20240101    120000AAMEM-101|ABACC-10001|">17 - Item Checkout (Patron MEM-101)</option>
-                  <option value="09N20240101    120000ABACC-10001|">09 - Item Checkin (ACC-10001)</option>
-                  <option value="2920240101    120000ABACC-10001|">29 - Loan Renewal (ACC-10001)</option>
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Pick a test message</label>
+                <select id="sip2-preset" onchange="document.getElementById('sip2-raw').value = this.value" class="w-full px-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-lg text-zinc-800 font-mono">
+                  <option value="9300CNadmin|COpassword|">93 - Kiosk logs in to library</option>
+                  <option value="1120240101    120000ABACC-10001|">11 - Kiosk asks: 'Is Book ACC-10001 available?'</option>
+                  <option value="17N20240101    120000AAMEM-101|ABACC-10001|">17 - Student borrows Book ACC-10001 at kiosk</option>
+                  <option value="09N20240101    120000ABACC-10001|">09 - Student returns Book ACC-10001 at kiosk</option>
+                  <option value="2920240101    120000ABACC-10001|">29 - Student asks to keep book for 14 more days</option>
                 </select>
               </div>
 
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">Raw Frame</label>
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Machine Message Code</label>
                 <textarea id="sip2-raw" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-950 text-zinc-100 rounded-lg border border-zinc-800">9300CNadmin|COpassword|</textarea>
               </div>
 
-              <button onclick="sendSip2Message()" class="w-full py-2.5 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
-                Dispatch SIP2 Message
+              <button onclick="sendSip2Message()" class="w-full py-2.5 px-3 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm active:scale-95">
+                Send Message to Library Software
               </button>
 
               <div id="sip2-response-box"></div>
@@ -757,32 +813,32 @@
           </div>
 
           <!-- NCIP 2.0 Adapter -->
-          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-2xs space-y-4">
+          <div class="bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div>
-                <h3 class="text-sm font-semibold text-zinc-900">NCIP 2.0 RESTful Protocol Adapter</h3>
-                <p class="text-xs text-zinc-400 mt-0.5">Modern JSON envelopes for Circulation Interchange</p>
+                <h3 class="text-sm font-bold text-zinc-900">Modern Web Connection (NCIP)</h3>
+                <p class="text-xs text-zinc-500 mt-0.5">Clean web format for university library networks</p>
               </div>
-              <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">NISO NCIP</span>
+              <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">NCIP 2.0</span>
             </div>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">NCIP Action</label>
-                <select id="ncip-action" class="w-full px-3 py-2 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg text-zinc-700 font-medium">
-                  <option value="LookupItem">LookupItem</option>
-                  <option value="CheckOutItem">CheckOutItem</option>
-                  <option value="CheckInItem">CheckInItem</option>
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Action to perform</label>
+                <select id="ncip-action" class="w-full px-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-lg text-zinc-800 font-medium">
+                  <option value="LookupItem">Look Up a Book</option>
+                  <option value="CheckOutItem">Borrow a Book</option>
+                  <option value="CheckInItem">Return a Book</option>
                 </select>
               </div>
 
               <div>
-                <label class="block text-xs font-medium text-zinc-700 mb-1">JSON Envelope Payload</label>
+                <label class="block text-xs font-bold text-zinc-700 mb-1">Message Details (JSON)</label>
                 <textarea id="ncip-payload" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-950 text-emerald-400 rounded-lg border border-zinc-800">{"ItemId": "ACC-10001", "UserId": "MEM-101"}</textarea>
               </div>
 
-              <button onclick="sendNcipRequest()" class="w-full py-2.5 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
-                Send NCIP 2.0 Request
+              <button onclick="sendNcipRequest()" class="w-full py-2.5 px-3 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm active:scale-95">
+                Send Request
               </button>
 
               <div id="ncip-response-box"></div>
@@ -793,15 +849,15 @@
 
       <!-- ================= TAB 6: REPORTS & AUDIT ================= -->
       <section id="analytics-tab" class="tab-pane space-y-6">
-        <!-- Explanatory "At a Glance" Card -->
-        <div class="p-4 bg-gradient-to-r from-zinc-100/80 to-white rounded-xl border border-zinc-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-          <div class="space-y-0.5">
+        <!-- Simple Explainer Box -->
+        <div class="p-4 bg-zinc-100 rounded-xl border border-zinc-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-zinc-900">At a Glance: What is the Audit Trail & KPIs?</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-200 text-zinc-700">Governance & Security</span>
+              <span class="text-sm font-bold text-zinc-950">Library Numbers & History Log:</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-zinc-200 text-zinc-800">Live Numbers</span>
             </div>
-            <p class="text-xs text-zinc-600">
-              Provides real-time visibility into total catalog titles, RFID tagging percentages, active loans, and gate alarms. The <strong>immutable audit trail</strong> cryptographically logs every checkout, return, card tap, and gate alarm.
+            <p class="text-xs text-zinc-600 leading-relaxed">
+              See how many books are owned, how many have smart tags, and review the history log of every single book borrow, return, and door alarm.
             </p>
           </div>
         </div>
@@ -812,27 +868,27 @@
         </div>
 
         <!-- Audit Trail Table -->
-        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-2xs space-y-3">
-          <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+        <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-2xs space-y-3">
+          <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
             <div>
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Immutable Audit Ledger (NFR 02, FR 11)</h3>
-              <p class="text-xs text-zinc-400 mt-0.5">Append-only record of every administrative and patron transaction</p>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-700">History Log (Who Did What)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Records every borrow, return, and alarm so nothing is lost</p>
             </div>
-            <button onclick="loadAuditLogs()" class="px-3.5 py-1.5 text-xs font-semibold bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 rounded-lg transition shadow-2xs">
-              Refresh Trail
+            <button onclick="loadAuditLogs()" class="px-3.5 py-1.5 text-xs font-bold bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 rounded-lg transition shadow-2xs active:scale-95">
+              🔄 Refresh List
             </button>
           </div>
 
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-              <thead class="bg-zinc-50/80 text-zinc-500 border-b border-zinc-100 font-medium">
+              <thead class="bg-zinc-100 text-zinc-600 border-b border-zinc-200 font-bold">
                 <tr>
                   <th class="py-3 px-4">#</th>
-                  <th class="py-3 px-4">Timestamp</th>
-                  <th class="py-3 px-4">Actor</th>
+                  <th class="py-3 px-4">When (Date/Time)</th>
+                  <th class="py-3 px-4">Who Did It</th>
                   <th class="py-3 px-4">Action</th>
-                  <th class="py-3 px-4">Entity</th>
-                  <th class="py-3 px-4">Payload Details</th>
+                  <th class="py-3 px-4">What Was Touched</th>
+                  <th class="py-3 px-4">Details</th>
                 </tr>
               </thead>
               <tbody id="audit-logs-body" class="divide-y divide-zinc-100 font-mono text-[11px] text-zinc-600">
@@ -850,7 +906,7 @@
   <div id="spine-modal" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-zinc-200 shadow-2xl max-w-sm w-full p-6 space-y-4">
       <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
-        <h3 class="text-sm font-semibold text-zinc-900">Thermal Spine Sticker Preview</h3>
+        <h3 class="text-sm font-bold text-zinc-900">Book Spine Sticker (To Print)</h3>
         <button onclick="closeSpineModal()" class="text-zinc-400 hover:text-zinc-700">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
@@ -862,7 +918,7 @@
 
       <div class="flex justify-end gap-2 pt-2">
         <button onclick="closeSpineModal()" class="px-3 py-1.5 text-xs text-zinc-600 hover:bg-zinc-100 rounded-lg">Close</button>
-        <button onclick="window.print()" class="px-3 py-1.5 text-xs bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg">Print Sticker</button>
+        <button onclick="window.print()" class="px-3.5 py-1.5 text-xs bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded-lg">Print Sticker</button>
       </div>
     </div>
   </div>

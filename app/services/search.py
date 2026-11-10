@@ -15,7 +15,8 @@ def search_catalog(
             SELECT t.id as title_id, t.isbn, t.title, t.author, t.publisher, t.publication_year, 
                    t.dewey_decimal, t.category,
                    COUNT(i.id) as total_copies,
-                   SUM(CASE WHEN i.status = 'AVAILABLE' THEN 1 ELSE 0 END) as available_copies
+                   SUM(CASE WHEN i.status = 'AVAILABLE' THEN 1 ELSE 0 END) as available_copies,
+                   MIN(i.accession_number) as sample_accession
             FROM titles t
             LEFT JOIN items i ON t.id = i.title_id
             WHERE 1=1
