@@ -99,3 +99,100 @@ def get_tag_details(rfid_epc: str, db_path: Optional[str] = None) -> Optional[Di
         )
         row = cursor.fetchone()
         return dict(row) if row else None
+
+def get_all_tagged_items(
+    limit: int = 30,
+    offset: int = 0,
+    query: Optional[str] = None,
+    db_path: Optional[str] = None
+) -> Dict[str, Any]:
+    with db_session(db_path) as conn:
+        cursor = conn.cursor()
+        sql = """
+            SELECT i.id, i.accession_number, i.rfid_epc, i.security_bit, i.status, 
+                   i.shelf_location, i.current_shelf, i.last_seen_at,
+                   t.title, t.author, t.category, t.dewey_decimal, t.isbn
+            FROM items i
+            JOIN titles t ON i.title_id = t.id
+            WHERE i.rfid_epc IS NOT NULL AND i.rfid_epc != ''
+        """
+        params = []
+        if query and query.strip():
+            w = f"%{query.strip()}%"
+            sql += " AND (i.rfid_epc LIKE ? OR i.accession_number LIKE ? OR t.title LIKE ? OR t.author LIKE ?)"
+            params.extend([w, w, w, w])
+
+        sql += " ORDER BY i.id DESC LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
+
+        cursor.execute(sql, params)
+        rows = [dict(r) for r in cursor.fetchall()]
+
+        count_sql = """
+            SELECT COUNT(*) 
+            FROM items i
+            JOIN titles t ON i.title_id = t.id
+            WHERE i.rfid_epc IS NOT NULL AND i.rfid_epc != ''
+        """
+        count_params = []
+        if query and query.strip():
+            w = f"%{query.strip()}%"
+            count_sql += " AND (i.rfid_epc LIKE ? OR i.accession_number LIKE ? OR t.title LIKE ? OR t.author LIKE ?)"
+            count_params.extend([w, w, w, w])
+
+        cursor.execute(count_sql, count_params)
+        total = cursor.fetchone()[0]
+
+        return {
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "items": rows
+        }
+
+def untag_item(
+    identifier: str,
+    operator_id: str = "STAFF_STATION",
+    db_path: Optional[str] = None
+) -> Dict[str, Any]:
+    clean_id = identifier.strip().upper()
+    with db_session(db_path) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """SELECT i.*, t.title 
+               FROM items i
+               JOIN titles t ON i.title_id = t.id
+               WHERE i.accession_number = ? OR i.rfid_epc = ?""",
+            (clean_id, clean_id)
+        )
+        item = cursor.fetchone()
+        if not item:
+            raise ValueError(f"Item not found for identifier '{clean_id}'")
+
+        old_epc = item["rfid_epc"]
+        cursor.execute(
+            "UPDATE items SET rfid_epc = NULL, security_bit = 0, last_seen_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (item["id"],)
+        )
+
+        record_audit(
+            actor_id=operator_id,
+            action="TAG_UNLINK",
+            entity_type="ITEM",
+            entity_id=item["accession_number"],
+            details={"previous_rfid_epc": old_epc, "title": item["title"]},
+            conn=conn
+        )
+
+        RFIDEventBus.publish_event("TAG_REMOVED", {
+            "accession_number": item["accession_number"],
+            "previous_epc": old_epc
+        })
+
+        return {
+            "success": True,
+            "accession_number": item["accession_number"],
+            "removed_epc": old_epc,
+            "item_title": item["title"],
+            "message": f"Successfully removed RFID Tag [{old_epc}] from item '{item['title']}' ({item['accession_number']})."
+        }

@@ -32,6 +32,7 @@ function switchTab(tabId) {
 
   if (tabId === "analytics-tab") loadDashboardReports();
   if (tabId === "opac-tab") searchCatalog();
+  if (tabId === "rfid-studio-tab") loadTaggedItems();
 }
 
 // --- Session & RBAC ---
@@ -285,6 +286,7 @@ async function executeTagAssociation() {
 
     box.innerHTML = `<div class="p-2 bg-emerald-50 text-emerald-800 text-xs rounded mt-2">Tag [${data.rfid_epc}] linked to item '${data.item_title}'.</div>`;
     searchCatalog();
+    loadTaggedItems();
   } catch (err) {
     box.innerHTML = `<div class="p-2 bg-rose-50 text-rose-800 text-xs rounded mt-2">${err.message}</div>`;
   }
@@ -354,6 +356,114 @@ async function executeGatePassage() {
     }
   } catch (err) {
     box.innerHTML = `<div class="p-2 bg-rose-50 text-rose-800 text-xs rounded mt-2">${err.message}</div>`;
+  }
+}
+
+// --- RFID Tag Registry (Lower Half) ---
+let currentTagPage = 1;
+let tagPageSize = 25;
+let totalTagRecords = 0;
+
+function prevTagPage() {
+  if (currentTagPage > 1) {
+    currentTagPage--;
+    loadTaggedItems();
+  }
+}
+
+function nextTagPage() {
+  const totalPages = Math.max(1, Math.ceil(totalTagRecords / tagPageSize));
+  if (currentTagPage < totalPages) {
+    currentTagPage++;
+    loadTaggedItems();
+  }
+}
+
+async function loadTaggedItems() {
+  const query = (document.getElementById("rfid-tag-search-input")?.value || "").trim();
+  const offset = (currentTagPage - 1) * tagPageSize;
+  let url = `/api/v1/rfid/tags?limit=${tagPageSize}&offset=${offset}`;
+  if (query) url += `&q=${encodeURIComponent(query)}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
+
+    totalTagRecords = data.total || 0;
+    const totalPages = Math.max(1, Math.ceil(totalTagRecords / tagPageSize));
+    
+    const countEl = document.getElementById("rfid-total-tags-count");
+    const currEl = document.getElementById("rfid-current-tag-page");
+    const totEl = document.getElementById("rfid-total-tag-pages");
+    if (countEl) countEl.textContent = totalTagRecords.toLocaleString();
+    if (currEl) currEl.textContent = currentTagPage;
+    if (totEl) totEl.textContent = totalPages;
+
+    const prevBtn = document.getElementById("btn-tag-prev");
+    const nextBtn = document.getElementById("btn-tag-next");
+    if (prevBtn) prevBtn.disabled = (currentTagPage <= 1);
+    if (nextBtn) nextBtn.disabled = (currentTagPage >= totalPages);
+
+    const tbody = document.getElementById("rfid-tags-tbody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    if (!data.items || data.items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-zinc-400">No tagged items found.</td></tr>`;
+      return;
+    }
+
+    data.items.forEach(item => {
+      const isArmed = item.security_bit === 1;
+      const isAvailable = item.status === "AVAILABLE";
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-zinc-50";
+      tr.innerHTML = `
+        <td class="py-2.5 px-3 font-mono text-[11px] font-bold text-zinc-900">${item.rfid_epc}</td>
+        <td class="py-2.5 px-3 font-mono text-[11px] text-zinc-600">${item.accession_number}</td>
+        <td class="py-2.5 px-3 font-semibold text-zinc-900 max-w-xs truncate">${item.title}</td>
+        <td class="py-2.5 px-3 text-zinc-500 text-[11px]">${item.author || '-'}</td>
+        <td class="py-2.5 px-3 font-mono text-[11px] text-zinc-500">${item.shelf_location || '-'}</td>
+        <td class="py-2.5 px-3">
+          <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+            isArmed ? 'bg-rose-50 text-rose-700' : 'bg-zinc-100 text-zinc-600'
+          }">
+            ${isArmed ? 'ARMED (1)' : 'DISARMED (0)'}
+          </span>
+        </td>
+        <td class="py-2.5 px-3">
+          <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+            isAvailable ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+          }">
+            ${item.status}
+          </span>
+        </td>
+        <td class="py-2.5 px-3 text-right">
+          <button onclick="executeUntag('${item.accession_number}', '${item.rfid_epc}')" class="px-2 py-0.5 text-[11px] font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded transition">
+            Untag
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error("Failed to load tagged items:", err);
+  }
+}
+
+async function executeUntag(accession, epc) {
+  if (!confirm(`Are you sure you want to remove RFID tag [${epc}] from book ${accession}?`)) return;
+  try {
+    const res = await fetch(`/api/v1/rfid/staff/untag-item?identifier=${encodeURIComponent(accession)}`, { method: "POST" });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Untag failed");
+
+    alert(`Untagged: ${data.message}`);
+    loadTaggedItems();
+    searchCatalog();
+  } catch (err) {
+    alert("Untag error: " + err.message);
   }
 }
 

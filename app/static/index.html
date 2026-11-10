@@ -367,6 +367,54 @@
             <div id="gate-feedback"></div>
           </div>
         </div>
+
+        <!-- Lower Half: RFID Tag Registry & Catalog -->
+        <div class="bg-white rounded-lg border border-zinc-200 overflow-hidden shadow-2xs space-y-0">
+          <div class="px-4 py-3 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-zinc-50/50">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-900">RFID Tag Registry (Tagged Items Catalog)</h3>
+              <p class="text-[11px] text-zinc-500 mt-0.5">Active RFID EPC smart tags associated with physical books</p>
+            </div>
+
+            <!-- Tag Search -->
+            <div class="flex items-center gap-2">
+              <input type="text" id="rfid-tag-search-input" onkeyup="if(event.key==='Enter') { currentTagPage = 1; loadTaggedItems(); }" placeholder="Search EPC, barcode, or title..." class="px-2.5 py-1 text-xs bg-white border border-zinc-200 rounded focus:outline-none w-48 sm:w-64">
+              <button onclick="currentTagPage = 1; loadTaggedItems();" class="px-3 py-1 text-xs font-semibold bg-zinc-900 text-white rounded hover:bg-zinc-800 transition">Search</button>
+            </div>
+          </div>
+
+          <!-- Tag Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-zinc-50 text-zinc-600 border-b border-zinc-200 font-semibold">
+                <tr>
+                  <th class="py-2.5 px-3 font-mono text-[11px]">RFID EPC Tag</th>
+                  <th class="py-2.5 px-3 font-mono text-[11px]">Book Barcode</th>
+                  <th class="py-2.5 px-3">Title</th>
+                  <th class="py-2.5 px-3">Author</th>
+                  <th class="py-2.5 px-3">Shelf</th>
+                  <th class="py-2.5 px-3">Alarm Bit</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="rfid-tags-tbody" class="divide-y divide-zinc-100 text-zinc-700">
+                <!-- Populated via loadTaggedItems() -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tag Pagination Bar -->
+          <div class="px-4 py-2 border-t border-zinc-200 bg-zinc-50 flex items-center justify-between text-xs">
+            <div class="flex gap-1.5">
+              <button id="btn-tag-prev" onclick="prevTagPage()" class="px-2.5 py-1 bg-white border border-zinc-200 text-zinc-700 rounded hover:bg-zinc-100 disabled:opacity-40">&larr; Prev</button>
+              <button id="btn-tag-next" onclick="nextTagPage()" class="px-2.5 py-1 bg-white border border-zinc-200 text-zinc-700 rounded hover:bg-zinc-100 disabled:opacity-40">Next &rarr;</button>
+            </div>
+            <span class="text-zinc-600">
+              Total Tagged: <strong id="rfid-total-tags-count" class="text-zinc-900 font-mono">0</strong> | Page <strong id="rfid-current-tag-page" class="text-zinc-900">1</strong> of <strong id="rfid-total-tag-pages" class="text-zinc-900">1</strong>
+            </span>
+          </div>
+        </div>
       </section>
 
       <!-- ================= MODULE 4: DATA MIGRATION ================= -->

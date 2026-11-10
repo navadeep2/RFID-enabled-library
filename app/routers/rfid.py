@@ -1,22 +1,41 @@
-from fastapi import APIRouter, HTTPException
+from typing import Optional
+from fastapi import APIRouter, HTTPException, Query
 from app.models.schemas import (
     TagAssociationRequest, TagAssociationResponse,
     HandheldScanRequest, HandheldScanResponse,
     GatePassageRequest, GatePassageResponse
 )
-from app.services.rfid_middleware import associate_tag_to_item, get_tag_details
+from app.services.rfid_middleware import (
+    associate_tag_to_item, get_tag_details,
+    get_all_tagged_items, untag_item
+)
 from app.services.inventory import audit_shelf_inventory
 from app.services.gate import process_gate_passage
 
 router = APIRouter(prefix="/api/v1/rfid", tags=["RFID Middleware & Hardware Mocks"])
 
-# 1. Staff Station: Associate Tag to Item (AC 02, FR 05)
+# 1. Staff Station: Associate & Untag Items (AC 02, FR 05)
 @router.post("/staff/tag-item", response_model=TagAssociationResponse)
 def tag_item(req: TagAssociationRequest):
     try:
         return associate_tag_to_item(req.accession_number, req.rfid_epc)
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
+
+@router.post("/staff/untag-item")
+def untag_item_route(identifier: str = Query(..., description="Accession number or EPC to untag")):
+    try:
+        return untag_item(identifier)
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+
+@router.get("/tags")
+def list_tagged_items(
+    limit: int = 30,
+    offset: int = 0,
+    q: Optional[str] = Query(None, description="Search EPC, barcode, title, or author")
+):
+    return get_all_tagged_items(limit=limit, offset=offset, query=q)
 
 @router.get("/tags/{epc}")
 def inspect_tag(epc: str):
