@@ -3,12 +3,22 @@ from pathlib import Path
 from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-DATA_DIR.mkdir(exist_ok=True)
-BACKUP_DIR = BASE_DIR / "backups"
-BACKUP_DIR.mkdir(exist_ok=True)
-SNAPSHOT_DIR = BASE_DIR / "snapshots"
-SNAPSHOT_DIR.mkdir(exist_ok=True)
+
+# Detect serverless environments (Vercel, AWS Lambda, Netlify) where filesystem is read-only except /tmp
+IS_SERVERLESS = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME") or os.getenv("NETLIFY"))
+
+if IS_SERVERLESS:
+    DATA_DIR = Path("/tmp/data")
+    BACKUP_DIR = Path("/tmp/backups")
+    SNAPSHOT_DIR = Path("/tmp/snapshots")
+else:
+    DATA_DIR = BASE_DIR / "data"
+    BACKUP_DIR = BASE_DIR / "backups"
+    SNAPSHOT_DIR = BASE_DIR / "snapshots"
+
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 class Settings(BaseModel):
     app_name: str = "AISYS RFID Library Management System"
