@@ -7,7 +7,7 @@ This matrix maps all stakeholder requirements from the [AISYS Candidate Software
 | Req ID | Area | SOP Requirement Summary | Implementation Component | Test ID / Evidence | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **FR 01** | Core ILMS | Acquisition, cataloguing, serials, circulation, OPAC, barcode/spine labels, reporting | `app/services/catalog.py`, `app/services/circulation.py`, `app/routers/catalog.py` | `test_catalog_crud`, `test_spine_label_generation` | Verified |
-| **FR 02** | Web & Search | Web UI, full-text search, real-time indexing, virtual bookshelf | `app/static/`, `app/routers/opac.py`, `app/services/search.py` | `test_opac_search_fulltext`, `test_virtual_bookshelf` | Verified |
+| **FR 02** | Web & Search | Web UI, full-text search, real-time indexing, virtual bookshelf | `app/static/`, `app/routers/catalog.py`, `app/services/search.py` | `test_opac_search_fulltext`, `test_virtual_bookshelf` | Verified |
 | **FR 03** | RFID Interoperability | Staff station, handheld, gate, smart card, NCIP 2.0 & SIP2 adapter boundary | `app/services/rfid_middleware.py`, `app/services/sip2_ncip_adapter.py` | `test_sip2_protocol_flow`, `test_ncip_adapter` | Verified |
 | **FR 04** | Circulation | Checkout, checkin, renew, due date, reference restrictions, blocking, configurable fines | `app/services/circulation.py` | `test_circulation_rules_fine_limit`, `test_reference_book_block` | Verified |
 | **FR 05** | Tagging | Validate title/member before tagging, associate RFID tag to record, tag monitoring | `app/services/rfid_middleware.py` | `test_tag_association_and_validation` | Verified |

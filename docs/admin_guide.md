@@ -1,38 +1,63 @@
 # Administrator Guide - AISYS RFID ILMS
 
-This guide instructs library administrators on system setup, authentication, security controls, backup management, and data migrations.
+This guide instructs system administrators on environment configuration, user management, deployment, cloud hosting, and disaster recovery.
 
 ---
 
 ## 1. System Requirements & Environment
-* **Operating System:** Windows 11 / Windows Server 2022 or later.
-* **Runtime:** Python 3.12+ (isolated local installation).
-* **Network:** Local Ethernet (Isolated Intranet, zero internet connection required).
-* **Storage:** 500 MB minimum for baseline application, ~100 MB per 20,000 catalog records and CCTV snapshots.
+
+* **Supported Operating Systems:** Windows 11, Windows Server 2022, Linux (Ubuntu 22.04+), Docker container runtime.
+* **Runtime:** Python 3.12+ (isolated virtual environment or container).
+* **Storage:** 500 MB for base application; ~100 MB per 20,000 catalog records and CCTV snapshot captures.
+* **Network:** Air-gapped / Local Intranet (zero external internet connection required for core operations).
 
 ---
 
-## 2. Starting and Stopping the Service
+## 2. Launching the Service
 
-### Quick Launch
+### Local Offline Launch
 ```powershell
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
-Open your browser to:
-`http://127.0.0.1:8000`
+Open your browser to: **`http://127.0.0.1:8000`**
 
-Interactive OpenAPI/Swagger documentation is available at:
+Interactive OpenAPI / Swagger documentation is available at:
 `http://127.0.0.1:8000/docs`
 
 ---
 
-## 3. User & Role Management (RBAC)
+## 3. Cloud & Remote Hosting
 
-The system supports 4 hierarchical privilege tiers:
+### Option A: Render.com (Free Web Service)
+1. Push the repository to GitHub.
+2. Log into [render.com](https://render.com) and create a **New Web Service**.
+3. Connect your repository.
+4. Render automatically reads the repository's [`Procfile`](file:///E:/projects/aisys/Procfile) and [`Dockerfile`](file:///E:/projects/aisys/Dockerfile):
+   * **Build Command:** `pip install -r requirements.txt`
+   * **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Provides a free permanent URL (e.g., `https://aisys-ilms.onrender.com`).
+
+### Option B: Docker Container
+```bash
+docker build -t aisys-ilms:latest .
+docker run -d -p 8000:8000 --name aisys aisys-ilms:latest
+```
+
+### Option C: Instant Local Sharing (No Cloud Account)
+```powershell
+npx localtunnel --port 8000
+```
+Outputs an instant public HTTPS tunnel URL for remote testing.
+
+---
+
+## 4. User Roles & Access Control (RBAC)
+
+The system enforces 4 hierarchical privilege tiers:
 1. **ADMIN:** System configuration, database migrations, backup/restore, audit review.
 2. **LIBRARIAN:** Cataloguing, RFID tag encoding, inventory shelf audits, reporting.
 3. **STAFF:** Circulation desk (checkout, checkin, renewals, fines).
-4. **PATRON:** OPAC catalog discovery, borrowing status.
+4. **PATRON:** Catalog discovery, borrowing status.
 
 ### Default Administrative Credentials
 | Role | Member Code | Smart Card UID | Default Password |
@@ -44,39 +69,49 @@ The system supports 4 hierarchical privilege tiers:
 
 ---
 
-## 4. Bulk Data Migration (~20,000 Records)
+## 5. API Endpoint Reference
 
-To import catalog data from a spreadsheet:
-1. Navigate to **20k Bulk Migration** in the web console, or run via CLI:
-   ```powershell
-   # Dry run validation
-   python scripts/run_migration.py --file data/synthetic_library_20000.csv --dry-run
+### Catalog & Discovery
+* `GET /api/v1/catalog/search`: Paginated bibliographic search with category and query filters.
+* `GET /api/v1/catalog/shelf/{shelf_location}`: Retrieves items assigned to a physical shelf.
+* `GET /api/v1/catalog/items/{accession_number}`: Retrieves individual item details and tag mapping.
 
-   # Live ingestion
-   python scripts/run_migration.py --file data/synthetic_library_20000.csv
-   ```
-2. The importer performs:
-   - Schema validation (ISBN format, mandatory titles, shelf locations).
-   - In-memory duplicate accession detection.
-   - Streaming batch staging.
-   - Generates a balanced reconciliation report.
-3. In case of error, rollback any batch with:
-   ```bash
-   POST /api/v1/migration/rollback/{batch_id}
-   ```
+### Circulation Desk
+* `POST /api/v1/circulation/checkout`: Issues an item to a patron and clears the RFID security bit.
+* `POST /api/v1/circulation/checkin`: Returns an item, arms the RFID security bit, and calculates overdue fines.
+* `POST /api/v1/circulation/renew`: Extends loan period by +14 days within policy renewal limits.
+
+### RFID Middleware & Devices
+* `POST /api/v1/rfid/staff/tag-item`: Encodes an RFID EPC and links it to a book barcode.
+* `POST /api/v1/rfid/staff/untag-item`: Disassociates an RFID EPC tag from a book.
+* `GET /api/v1/rfid/tags`: Paginated registry of all active tagged items with search.
+* `GET /api/v1/rfid/tags/{epc}`: Inspects individual tag memory and paired accession.
+* `POST /api/v1/rfid/handheld/audit-shelf`: Reconciles shelf inventory (supports both EPCs and Barcodes).
+* `POST /api/v1/rfid/gate/passage`: Monitors exit passages, detects armed items, and queues alerts.
+
+### Migration Engine
+* `POST /api/v1/migration/generate-synthetic`: Prepares/verifies the 20,000-record benchmark dataset.
+* `POST /api/v1/migration/import-synthetic`: Executes dry-run validation or live ingestion of 20k rows.
+* `POST /api/v1/migration/upload-csv`: Processes user-uploaded CSV catalog files.
+* `POST /api/v1/migration/rollback/{batch_id}`: Atomically deletes all items from a batch and purges orphaned titles.
+
+### System & Disaster Recovery
+* `POST /api/v1/admin/backup`: Generates a point-in-time SQLite snapshot with SHA-256 verification.
+* `GET /api/v1/admin/audit-logs`: Retrieves immutable system event logs.
+* `GET /api/v1/reports/summary`: Retrieves live KPI metrics.
 
 ---
 
-## 5. Backup & Disaster Recovery
+## 6. Backup & Disaster Recovery
 
 * **Create Snapshot Backup:**
   ```powershell
   python scripts/backup.py
   ```
-  Creates a point-in-time `.db` snapshot in `backups/` along with a SHA-256 integrity file (`.sha256`).
+  Creates a `.db` snapshot in `backups/` alongside a SHA-256 cryptographic verification file (`.sha256`).
 
 * **Restore from Snapshot:**
   ```powershell
   python scripts/restore.py backups/aisys_db_backup_<timestamp>.db
   ```
-  Restores the database with SHA-256 cryptographic verification and clears stale journal locks.
+  Verifies the SHA-256 hash, clears stale SQLite `-wal` and `-shm` locks, and safely restores the database.
