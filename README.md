@@ -1,3 +1,12 @@
+---
+title: AISYS RFID Library Management System
+emoji: 📚
+colorFrom: indigo
+colorTo: blue
+sdk: docker
+app_port: 7860
+---
+
 # AISYS RFID Integrated Library Management Software (ILMS)
 
 > Enterprise-grade, offline-resilient library management solution with RFID hardware mocks, standards interoperability (SIP2 & NCIP 2.0), high-throughput bulk migration, and a practical minimalist interface.
