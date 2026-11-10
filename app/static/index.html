@@ -1,134 +1,309 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-zinc-50 antialiased">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AISYS RFID Library Management System</title>
+  <title>AISYS | RFID Integrated Library Management</title>
+  <!-- Tailwind CSS via official Play CDN with custom theme config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f5ff',
+              100: '#e5edff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar">
-    <div class="brand">
-      <div style="font-size: 1.8rem;">📚</div>
+<body class="h-full flex flex-col md:flex-row overflow-hidden text-zinc-900 font-sans selection:bg-zinc-200">
+
+  <!-- Mobile Top Bar with Hamburger -->
+  <header class="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-200/80 z-40">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
+        AI
+      </div>
       <div>
-        <h1>AISYS ILMS</h1>
-        <span>RFID Enterprise Edition</span>
+        <span class="font-semibold text-sm tracking-tight text-zinc-900">AISYS Library</span>
+        <span class="block text-[10px] text-zinc-500 font-medium">RFID Enterprise</span>
       </div>
     </div>
+    <button onclick="toggleMobileNav()" class="p-2 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 transition focus:outline-none">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </header>
 
-    <ul class="nav-menu">
-      <li>
-        <button class="nav-btn active" onclick="switchTab('opac-tab')">
-          <span>🔍</span> OPAC & Catalog
+  <!-- Mobile Navigation Overlay Drawer -->
+  <div id="mobile-nav-drawer" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden md:hidden transition-opacity">
+    <div class="fixed inset-y-0 left-0 w-72 bg-white p-5 flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-zinc-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm">AI</div>
+          <span class="font-semibold text-sm tracking-tight">AISYS ILMS</span>
+        </div>
+        <button onclick="toggleMobileNav()" class="p-1.5 text-zinc-400 hover:text-zinc-700 rounded-md">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
-      </li>
-      <li>
-        <button class="nav-btn" onclick="switchTab('circulation-tab')">
-          <span>🔄</span> Circulation Desk
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" onclick="switchTab('rfid-studio-tab')">
-          <span>📡</span> RFID Studio
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" onclick="switchTab('migration-tab')">
-          <span>⚡</span> 20k Bulk Migration
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" onclick="switchTab('interop-tab')">
-          <span>🔌</span> SIP2 & NCIP Interop
-        </button>
-      </li>
-      <li>
-        <button class="nav-btn" onclick="switchTab('analytics-tab')">
-          <span>📊</span> Reports & Audit Logs
-        </button>
-      </li>
-    </ul>
-
-    <div class="sidebar-footer">
-      <div class="system-badge" id="system-health-badge">
-        <span class="pulse-dot"></span>
-        <span id="health-text">OFFLINE READY</span>
       </div>
-      <div style="color: #94a3b8;">
-        User: <strong id="current-user-name" style="color: #fff;">Librarian Robert</strong><br>
-        Role: <span class="badge badge-info" id="current-user-role">LIBRARIAN</span>
+
+      <nav class="flex-1 py-4 space-y-1 overflow-y-auto">
+        <button onclick="switchTab('opac-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          OPAC & Catalog
+        </button>
+        <button onclick="switchTab('circulation-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          Circulation Desk
+        </button>
+        <button onclick="switchTab('rfid-studio-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          RFID Studio
+        </button>
+        <button onclick="switchTab('migration-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          20k Bulk Migration
+        </button>
+        <button onclick="switchTab('interop-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          SIP2 & NCIP Interop
+        </button>
+        <button onclick="switchTab('analytics-tab'); toggleMobileNav()" class="mobile-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
+          <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Analytics & Audits
+        </button>
+      </nav>
+
+      <div class="pt-4 border-t border-zinc-100 text-xs text-zinc-500">
+        User: <span class="font-medium text-zinc-800" id="mobile-user-name">Librarian Robert</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Sidebar Navigation -->
+  <aside class="hidden md:flex flex-col w-64 lg:w-72 bg-white border-r border-zinc-200/80 p-5 flex-shrink-0 z-30 justify-between select-none">
+    <div class="space-y-6">
+      <!-- Brand Header -->
+      <div class="flex items-center gap-3 px-1">
+        <div class="w-9 h-9 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm ring-1 ring-zinc-900/10">
+          AI
+        </div>
+        <div>
+          <h1 class="font-semibold text-sm tracking-tight text-zinc-900">AISYS Library</h1>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-[11px] font-medium text-zinc-400">Offline Connected</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1">
+        <button onclick="switchTab('opac-tab')" class="sidebar-nav-btn active group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span>OPAC & Catalog</span>
+          </div>
+          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500">Search</span>
+        </button>
+
+        <button onclick="switchTab('circulation-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            <span>Circulation Desk</span>
+          </div>
+          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500">Desk</span>
+        </button>
+
+        <button onclick="switchTab('rfid-studio-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>RFID Studio</span>
+          </div>
+          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-mono">RFID</span>
+        </button>
+
+        <button onclick="switchTab('migration-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            <span>20k Bulk Ingestion</span>
+          </div>
+          <span class="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 font-mono">~20k</span>
+        </button>
+
+        <button onclick="switchTab('interop-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span>SIP2 & NCIP Protocol</span>
+          </div>
+        </button>
+
+        <button onclick="switchTab('analytics-tab')" class="sidebar-nav-btn group w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs lg:text-sm font-medium transition">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>Audit Trail & KPIs</span>
+          </div>
+        </button>
+      </nav>
+    </div>
+
+    <!-- User & Station Profile Card -->
+    <div class="pt-4 border-t border-zinc-100 space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-700" id="avatar-initials">
+            LR
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-zinc-900 leading-tight" id="desktop-user-name">Librarian Robert</div>
+            <div class="text-[10px] text-zinc-400" id="desktop-user-role">LIBRARIAN</div>
+          </div>
+        </div>
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+          Ready
+        </span>
+      </div>
+
+      <!-- Quick Audio Feedback Toggle -->
+      <div class="flex items-center justify-between text-[11px] text-zinc-500 px-1">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+          Audio Cues
+        </span>
+        <button id="audio-toggle-btn" onclick="toggleAudioMute()" class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">
+          ENABLED
+        </button>
       </div>
     </div>
   </aside>
 
   <!-- Main View Area -->
-  <main class="main-wrapper">
-    <header class="top-bar">
-      <div class="top-title" id="page-title">OPAC Catalog & Virtual Bookshelf</div>
-      <div class="top-actions">
-        <!-- Quick Smart Card Switcher (AC 07) -->
-        <select id="smartcard-selector" class="form-control" style="width: auto;" onchange="switchSmartCard(this.value)">
-          <option value="CARD-LIB-7766">Tap Card: Librarian Robert (LIBRARIAN)</option>
-          <option value="CARD-ADM-9988">Tap Card: Administrator Jane (ADMIN)</option>
-          <option value="CARD-STF-5544">Tap Card: Staff Alice (STAFF)</option>
-          <option value="CARD-MEM-101">Tap Card: Patron Emily Brown (PATRON)</option>
-        </select>
-        <button class="btn btn-secondary" onclick="triggerSnapshotBackup()">
-          <span>💾</span> Backup DB
+  <main class="flex-1 flex flex-col h-full overflow-hidden bg-zinc-50">
+    <!-- Top Action Bar -->
+    <header class="hidden md:flex items-center justify-between px-6 lg:px-8 py-3.5 bg-white border-b border-zinc-200/80 z-20 flex-shrink-0">
+      <div>
+        <h2 class="text-base font-semibold text-zinc-900 tracking-tight" id="page-title">OPAC Catalog & Virtual Bookshelf</h2>
+        <p class="text-xs text-zinc-400 mt-0.5" id="page-subtitle">Real-time full-text bibliographic indexing and shelf visualizer</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Smart Card Tap Simulator (AC 07) -->
+        <div class="flex items-center gap-2 bg-zinc-100/80 p-1 pl-2.5 rounded-lg border border-zinc-200/60">
+          <span class="text-[11px] font-medium text-zinc-500 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            Card Tap:
+          </span>
+          <select id="smartcard-selector" onchange="switchSmartCard(this.value)" class="text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-md py-1 px-2.5 focus:outline-none focus:ring-1 focus:ring-zinc-900 transition">
+            <option value="CARD-LIB-7766">Librarian Robert (LIBRARIAN)</option>
+            <option value="CARD-ADM-9988">Administrator Jane (ADMIN)</option>
+            <option value="CARD-STF-5544">Staff Alice (STAFF)</option>
+            <option value="CARD-MEM-1122">Patron Emily Brown (PATRON)</option>
+          </select>
+        </div>
+
+        <!-- Point-in-time Snapshot Backup -->
+        <button onclick="triggerSnapshotBackup()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 transition shadow-sm active:scale-95">
+          <svg class="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+          Snapshot DB
         </button>
       </div>
     </header>
 
-    <div class="content-body">
+    <!-- Scrollable Content Viewport -->
+    <div class="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
       <!-- ================= TAB 1: OPAC & CATALOG ================= -->
-      <section id="opac-tab" class="tab-pane active">
-        <div class="card">
-          <div class="card-title">Catalog Search & Real-Time Discovery</div>
-          <div class="form-row">
-            <div class="form-group" style="flex: 2;">
-              <label>Search by Title, Author, ISBN, or Category</label>
-              <input type="text" id="opac-search-input" class="form-control" placeholder="e.g. C Programming, Algorithms, Orwell..." onkeyup="if(event.key==='Enter') searchCatalog()">
+      <section id="opac-tab" class="tab-pane active space-y-6">
+        <!-- Search Bar & Filters -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-4 lg:p-5 shadow-sm space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-8 lg:col-span-9 relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <svg class="h-4 w-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <input type="text" id="opac-search-input" onkeyup="if(event.key==='Enter') searchCatalog()" placeholder="Search title, author, ISBN (e.g. Algorithms, Orwell, C Programming)..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition placeholder:text-zinc-400">
             </div>
-            <div class="form-group">
-              <label>Category Filter</label>
-              <select id="opac-cat-filter" class="form-control" onchange="searchCatalog()">
+
+            <div class="sm:col-span-4 lg:col-span-3 flex gap-2">
+              <select id="opac-cat-filter" onchange="searchCatalog()" class="w-full text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:bg-white transition font-medium text-zinc-700">
                 <option value="">All Categories</option>
                 <option value="Computer Science">Computer Science</option>
                 <option value="Literature">Literature</option>
                 <option value="Reference">Reference</option>
               </select>
+              <button onclick="searchCatalog()" class="px-4 py-2.5 text-xs lg:text-sm font-medium bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition shadow-sm active:scale-95 flex-shrink-0">
+                Search
+              </button>
             </div>
-            <div class="form-group" style="justify-content: flex-end;">
-              <button class="btn btn-primary" onclick="searchCatalog()">Search Catalog</button>
-            </div>
+          </div>
+
+          <!-- Quick Discovery Pills -->
+          <div class="flex items-center gap-2 pt-1 overflow-x-auto text-xs text-zinc-500">
+            <span class="font-medium text-zinc-400 text-[11px] uppercase tracking-wider">Quick:</span>
+            <button onclick="quickSearch('Computer Science')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Computer Science</button>
+            <button onclick="quickSearch('Literature')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Literature</button>
+            <button onclick="quickSearch('Algorithms')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Algorithms</button>
+            <button onclick="quickSearch('Kernighan')" class="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Kernighan</button>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Virtual Bookshelf (Shelf: SHELF-CS-01)</div>
-          <div class="shelf-visual" id="shelf-visual-container">
-            <!-- Dynamic Bookshelf Spines -->
+        <!-- Virtual Bookshelf (Visual tactile representations) -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-900">Virtual Bookshelf — <code class="text-xs bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-700">SHELF-CS-01</code></h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Physical orientation and RFID status on shelf. Click a book to inspect its RFID EPC.</p>
+            </div>
+            <span class="text-xs font-mono text-zinc-400">Interactive 3D spines</span>
+          </div>
+
+          <!-- Bookshelf Container -->
+          <div class="relative bg-gradient-to-b from-stone-900 to-stone-950 rounded-xl p-6 pt-10 border-b-8 border-stone-800 shadow-inner overflow-x-auto flex items-end gap-2.5 min-h-[160px]" id="shelf-visual-container">
+            <!-- Dynamic Spines Injected Here -->
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Search Results (<span id="results-count">0</span> items found)</div>
-          <div class="table-responsive">
-            <table>
-              <thead>
+        <!-- Search Results Table -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-sm">
+          <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Catalog Titles (<span id="results-count" class="text-zinc-900 font-mono">0</span> Found)
+            </h3>
+            <span class="text-xs text-zinc-400">Showing top results</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-zinc-50/80 text-zinc-500 border-b border-zinc-100 font-medium">
                 <tr>
-                  <th>ISBN</th>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Category</th>
-                  <th>Dewey Call #</th>
-                  <th>Available Copies</th>
-                  <th>Actions</th>
+                  <th class="py-3 px-4">ISBN</th>
+                  <th class="py-3 px-4">Title</th>
+                  <th class="py-3 px-4">Author</th>
+                  <th class="py-3 px-4">Category</th>
+                  <th class="py-3 px-4">Call Number</th>
+                  <th class="py-3 px-4">Availability</th>
+                  <th class="py-3 px-4 text-right">Spine Sticker</th>
                 </tr>
               </thead>
-              <tbody id="catalog-results-body">
-                <!-- Dynamically populated -->
+              <tbody id="catalog-results-body" class="divide-y divide-zinc-100 text-zinc-700">
+                <!-- Dynamically Populated -->
               </tbody>
             </table>
           </div>
@@ -136,254 +311,367 @@
       </section>
 
       <!-- ================= TAB 2: CIRCULATION DESK ================= -->
-      <section id="circulation-tab" class="tab-pane">
-        <div class="grid-cards">
-          <div class="card" style="margin-bottom: 0;">
-            <div class="card-title">Item Check-Out (Issue)</div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>Patron Library Card / Code</label>
-              <input type="text" id="circ-patron-code" class="form-control" placeholder="e.g. MEM-101, MEM-102 (High Fine), MEM-103 (Blocked)" value="MEM-101">
+      <section id="circulation-tab" class="tab-pane space-y-6">
+        <!-- Interactive Desk Workstation -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Check-Out Box -->
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                <h3 class="text-sm font-semibold text-zinc-900">Check-Out (Issue Book)</h3>
+              </div>
+              <span class="text-[11px] font-mono text-zinc-400">DISARMS RFID SECURITY (0)</span>
             </div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>Item Identifier (Accession # or Scanned RFID EPC)</label>
-              <input type="text" id="circ-item-id" class="form-control" placeholder="e.g. ACC-10001 or E280110520000001" value="ACC-10001">
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">Patron Code / Smart Card</label>
+                <input type="text" id="circ-patron-code" value="MEM-101" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">Item Identifier (Accession # or RFID EPC)</label>
+                <input type="text" id="circ-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
+              </div>
+
+              <button onclick="executeCheckout()" class="w-full py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 text-white text-xs lg:text-sm font-medium rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Issue Book & Disarm Security
+              </button>
+
+              <div id="checkout-feedback"></div>
             </div>
-            <button class="btn btn-primary" onclick="executeCheckout()" style="width: 100%;">
-              Issue Book & Disarm RFID Security
-            </button>
-            <div id="checkout-feedback" style="margin-top: 1rem;"></div>
           </div>
 
-          <div class="card" style="margin-bottom: 0;">
-            <div class="card-title">Item Check-In (Return & Re-Arm)</div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>Returned Item Identifier</label>
-              <input type="text" id="checkin-item-id" class="form-control" placeholder="e.g. ACC-10001 or E280110520000001" value="ACC-10001">
+          <!-- Check-In Box -->
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <h3 class="text-sm font-semibold text-zinc-900">Check-In (Return Book)</h3>
+              </div>
+              <span class="text-[11px] font-mono text-zinc-400">RE-ARMS SECURITY BIT (1)</span>
             </div>
-            <button class="btn btn-success" onclick="executeCheckin()" style="width: 100%;">
-              Return Book & Arm Security Bit
-            </button>
-            <div id="checkin-feedback" style="margin-top: 1rem;"></div>
 
-            <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">Scanned Item Identifier</label>
+                <input type="text" id="checkin-item-id" value="ACC-10001" class="w-full px-3 py-2 text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 font-mono">
+              </div>
 
-            <div class="card-title" style="font-size: 0.95rem;">Renew Loan</div>
-            <div class="form-group" style="margin-bottom: 0.75rem;">
-              <input type="text" id="renew-item-id" class="form-control" placeholder="Accession number to renew" value="ACC-10001">
+              <button onclick="executeCheckin()" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs lg:text-sm font-medium rounded-lg transition shadow-sm active:scale-[0.99] flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Return Book & Re-Arm Security
+              </button>
+
+              <div id="checkin-feedback"></div>
+
+              <!-- Quick Renewal Accordion/Section -->
+              <div class="pt-3 border-t border-zinc-100">
+                <div class="flex gap-2">
+                  <input type="text" id="renew-item-id" value="ACC-10001" placeholder="Item accession" class="flex-1 px-3 py-1.5 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+                  <button onclick="executeRenewal()" class="px-3 py-1.5 text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition">
+                    Renew (+14d)
+                  </button>
+                </div>
+                <div id="renew-feedback" class="mt-2 text-xs"></div>
+              </div>
             </div>
-            <button class="btn btn-secondary" onclick="executeRenewal()" style="width: 100%;">
-              Renew Loan (+14 Days)
-            </button>
-            <div id="renew-feedback" style="margin-top: 0.5rem;"></div>
           </div>
         </div>
 
-        <div class="card" style="margin-top: 1.5rem;">
-          <div class="card-title">Test Policy Constraints (AC 04 Rules)</div>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-            Test the 3 hard-coded circulation invariants defined in SOP Section 4 & AC 04:
-          </p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <button class="btn btn-secondary" onclick="simulateConstraintTest('FINE_LIMIT')">
-              ⚠️ Test Fine Limit Barrier (Patron MEM-102 has $25.50 fines)
+        <!-- Policy Invariants Barrier Test (AC 04) -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-zinc-900">Circulation Policy Invariant Simulators (AC 04)</h3>
+            <span class="text-xs text-zinc-400">One-click edge cases</span>
+          </div>
+          <p class="text-xs text-zinc-500">Test the 3 strict barrier enforcement rules defined in the SOP specification:</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <button onclick="simulateConstraintTest('FINE_LIMIT')" class="p-3 text-left border border-zinc-200 rounded-lg hover:border-amber-300 hover:bg-amber-50/30 transition group">
+              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-amber-800">1. Fine Limit Barrier</span>
+              <span class="block text-[11px] text-zinc-500 mt-1">MEM-102 owes $25.50 (Limit $15.00)</span>
             </button>
-            <button class="btn btn-secondary" onclick="simulateConstraintTest('MEMBER_BLOCKED')">
-              🚫 Test Suspended Patron Barrier (Patron MEM-103 is blocked)
+
+            <button onclick="simulateConstraintTest('MEMBER_BLOCKED')" class="p-3 text-left border border-zinc-200 rounded-lg hover:border-rose-300 hover:bg-rose-50/30 transition group">
+              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-rose-800">2. Suspended Patron</span>
+              <span class="block text-[11px] text-zinc-500 mt-1">MEM-103 account blocked by admin</span>
             </button>
-            <button class="btn btn-secondary" onclick="simulateConstraintTest('REFERENCE_ONLY')">
-              🔒 Test Reference-Only Book Barrier (Item ACC-10008 is Reference)
+
+            <button onclick="simulateConstraintTest('REFERENCE_ONLY')" class="p-3 text-left border border-zinc-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/30 transition group">
+              <span class="block text-xs font-semibold text-zinc-900 group-hover:text-blue-800">3. Reference Only</span>
+              <span class="block text-[11px] text-zinc-500 mt-1">ACC-10008 is Reference Dictionary</span>
             </button>
           </div>
         </div>
       </section>
 
       <!-- ================= TAB 3: RFID STUDIO ================= -->
-      <section id="rfid-studio-tab" class="tab-pane">
-        <!-- Staff Tagging Station -->
-        <div class="card">
-          <div class="card-title">1. Staff Tagging & Encoding Station (AC 02, FR 05)</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Accession Number</label>
-              <input type="text" id="tag-accession" class="form-control" placeholder="e.g. ACC-10002" value="ACC-10002">
+      <section id="rfid-studio-tab" class="tab-pane space-y-6">
+        <!-- 1. Staff Station Tagging -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-900">1. Staff RFID Encoding Station (AC 02, FR 05)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Validate catalog copy and pair a physical EPC Gen2 tag ID</p>
             </div>
-            <div class="form-group">
-              <label>RFID EPC Gen2 Tag (Hex)</label>
-              <input type="text" id="tag-epc" class="form-control" placeholder="e.g. E2801105200000099" value="E280110520000099">
+            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">STATION-DESK-01</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-4">
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Accession Number</label>
+              <input type="text" id="tag-accession" value="ACC-10002" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
-            <div class="form-group" style="justify-content: flex-end;">
-              <button class="btn btn-primary" onclick="executeTagAssociation()">
-                Encode & Associate Tag
+            <div class="sm:col-span-5">
+              <label class="block text-xs font-medium text-zinc-700 mb-1">RFID EPC (16-32 Hex Characters)</label>
+              <input type="text" id="tag-epc" value="E280110520000099" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
+            </div>
+            <div class="sm:col-span-3 flex items-end">
+              <button onclick="executeTagAssociation()" class="w-full py-2 px-3 text-xs lg:text-sm font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+                Pair & Lock Tag
               </button>
             </div>
           </div>
           <div id="tag-station-feedback"></div>
         </div>
 
-        <!-- Handheld Shelf Inventory Scanner -->
-        <div class="card">
-          <div class="card-title">
-            <span>2. Handheld Reader: Shelf Inventory Audit (AC 05, FR 06)</span>
-            <span class="badge badge-info">Audible & Visual Cues Enabled</span>
+        <!-- 2. Handheld Scanner (Audible & Visual Cues) -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-900">2. Handheld Shelf Auditor (AC 05, FR 06)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Rapid batch sweep. Synthesizes hardware beeps & flags misplaced items.</p>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700">Audio Synth Ready</span>
           </div>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-            Simulate a shelf sweep. The handheld checks expected items vs scanned RFID tags, detecting misplaced or missing items and emitting synthesized audio beeps.
-          </p>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Target Shelf ID</label>
-              <input type="text" id="handheld-shelf" class="form-control" value="SHELF-CS-01">
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Audited Shelf ID</label>
+              <input type="text" id="handheld-shelf" value="SHELF-CS-01" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
-            <div class="form-group" style="flex: 2;">
-              <label>Detected Tag EPCs (Comma-separated)</label>
-              <input type="text" id="handheld-epcs" class="form-control" value="E280110520000001, E280110520000006">
+            <div class="sm:col-span-6">
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Scanned EPCs (Comma-separated)</label>
+              <input type="text" id="handheld-epcs" value="E280110520000001, E280110520000006" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
-            <div class="form-group" style="justify-content: flex-end;">
-              <button class="btn btn-primary" onclick="executeHandheldScan()">
+            <div class="sm:col-span-3 flex items-end">
+              <button onclick="executeHandheldScan()" class="w-full py-2 px-3 text-xs lg:text-sm font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
                 Simulate Shelf Sweep
               </button>
             </div>
           </div>
-          <div id="handheld-results-box" style="margin-top: 1rem;"></div>
+          <div id="handheld-results-box"></div>
         </div>
 
-        <!-- Security Gate Portal Simulator -->
-        <div class="card">
-          <div class="card-title">
-            <span>3. RFID Security Gate Portal & CCTV Alarm (AC 06, FR 07)</span>
-            <span class="badge badge-danger">Offline Security Bit Verification</span>
+        <!-- 3. Security Gate Portal & CCTV Alarm Simulator -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-900">3. RFID Security Gate & CCTV Portal (AC 06, FR 07)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Detects unissued items, reads security bit offline, records CCTV image, queues alert</p>
+            </div>
+            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">GATE-MAIN-01</span>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Gate Portal</label>
-              <input type="text" id="gate-portal-id" class="form-control" value="GATE-MAIN-01" readonly>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Portal Location</label>
+              <input type="text" id="gate-portal-id" value="GATE-MAIN-01" readonly class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-100 text-zinc-500 border border-zinc-200 rounded-lg font-mono">
             </div>
-            <div class="form-group" style="flex: 2;">
-              <label>Passing Tag EPCs (e.g. E280110520000001 has active security bit)</label>
-              <input type="text" id="gate-passing-epcs" class="form-control" value="E280110520000001">
+            <div class="sm:col-span-6">
+              <label class="block text-xs font-medium text-zinc-700 mb-1">Passing Tag EPC (Unissued ACC-10001 has Security Bit = 1)</label>
+              <input type="text" id="gate-passing-epcs" value="E280110520000001" class="w-full px-3 py-2 text-xs lg:text-sm bg-zinc-50/50 border border-zinc-200 rounded-lg font-mono">
             </div>
-            <div class="form-group" style="justify-content: flex-end;">
-              <button class="btn btn-danger" onclick="executeGatePassage()">
-                Simulate Gate Passage
+            <div class="sm:col-span-3 flex items-end">
+              <button onclick="executeGatePassage()" class="w-full py-2 px-3 text-xs lg:text-sm font-medium bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition shadow-sm">
+                Pass Through Gate
               </button>
             </div>
           </div>
 
-          <div id="gate-alarm-banner" style="display: none;" class="alarm-banner">
-            <h3>🚨 SECURITY BREACH: UNAUTHORISED BOOK REMOVAL DETECTED!</h3>
-            <p id="gate-alarm-details"></p>
-            <div style="margin-top: 1rem; display: flex; gap: 1rem; align-items: center;">
+          <!-- Gate Breach Alarm Card (Hidden until triggered) -->
+          <div id="gate-alarm-banner" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-5 space-y-4 animate-pulse">
+            <div class="flex items-center gap-2 text-rose-700 font-semibold text-sm">
+              <span class="w-3 h-3 rounded-full bg-rose-600"></span>
+              SECURITY BREACH: UNAUTHORISED BOOK REMOVAL DETECTED
+            </div>
+            <p id="gate-alarm-details" class="text-xs text-rose-800"></p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-white/80 p-3 rounded-lg border border-rose-100">
               <div>
-                <strong>Simulated CCTV Frame Snapshot:</strong><br>
-                <canvas id="cctv-canvas" width="240" height="135" style="border: 2px solid #ef4444; border-radius: 4px; background: #000; margin-top: 0.5rem;"></canvas>
+                <span class="text-[11px] font-medium text-zinc-500 block mb-1">Simulated CCTV Forensic Snapshot:</span>
+                <canvas id="cctv-canvas" width="240" height="135" class="rounded border border-zinc-300 shadow-sm bg-black"></canvas>
               </div>
-              <div id="gate-email-notice" style="font-size: 0.85rem;"></div>
+              <div id="gate-email-notice" class="text-xs text-zinc-600 space-y-1">
+                <!-- Dispatched alert info -->
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- ================= TAB 4: BULK MIGRATION ================= -->
-      <section id="migration-tab" class="tab-pane">
-        <div class="card">
-          <div class="card-title">20,000 Record Spreadsheet Migration Utility (FR 10, AC 01)</div>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-            Test high-volume data ingestion. You can generate a full 20,000 synthetic record test dataset with intentional valid, duplicate, and invalid edge cases, run a safe dry-run validation, execute migration into staging/catalog, and perform an instant atomic rollback.
-          </p>
+      <section id="migration-tab" class="tab-pane space-y-6">
+        <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-900">20,000 Record Spreadsheet Migration Pipeline (FR 10, AC 01)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">High-speed streaming ingestion, pre-validation dry-run, reconciliation, and instant atomic rollback.</p>
+            </div>
+            <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">ACID Staging</span>
+          </div>
 
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
-            <button class="btn btn-secondary" onclick="generateSyntheticDataset()">
-              <span>⚙️</span> 1. Generate 20,000 Synthetic Records CSV
+          <div class="flex flex-wrap gap-3">
+            <button onclick="generateSyntheticDataset()" class="px-4 py-2 text-xs lg:text-sm font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg transition shadow-sm flex items-center gap-2">
+              <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+              1. Generate 20,000 Synthetic CSV
             </button>
-            <button class="btn btn-primary" onclick="runMigrationTest(true)">
-              <span>🧪</span> 2. Dry-Run Validation (No DB Changes)
+            <button onclick="runMigrationTest(true)" class="px-4 py-2 text-xs lg:text-sm font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm flex items-center gap-2">
+              <svg class="w-4 h-4 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              2. Dry-Run Validation (No DB Changes)
             </button>
-            <button class="btn btn-success" onclick="runMigrationTest(false)">
-              <span>🚀</span> 3. Execute Live Migration (~20k Records)
+            <button onclick="runMigrationTest(false)" class="px-4 py-2 text-xs lg:text-sm font-medium bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-sm flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              3. Execute Live Ingestion
             </button>
           </div>
 
-          <div id="migration-status-box" style="display: none;">
-            <!-- Migration summary populated here -->
-          </div>
+          <div id="migration-status-box" class="hidden"></div>
         </div>
       </section>
 
       <!-- ================= TAB 5: SIP2 & NCIP INTEROP ================= -->
-      <section id="interop-tab" class="tab-pane">
-        <div class="grid-cards">
-          <div class="card" style="margin-bottom: 0;">
-            <div class="card-title">3M SIP2 Protocol Adapter</div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>Select SIP2 Test Message</label>
-              <select id="sip2-preset" class="form-control" onchange="document.getElementById('sip2-raw').value = this.value">
-                <option value="9300CNadmin|COpassword|">93 - Login Request</option>
-                <option value="1120240101    120000ABACC-10001|">11 - Item Information Request (ACC-10001)</option>
-                <option value="17N20240101    120000AA001|ABACC-10001|">17 - Item Checkout Request (Patron MEM-101)</option>
-                <option value="09N20240101    120000ABACC-10001|">09 - Item Checkin Request (ACC-10001)</option>
-                <option value="2920240101    120000ABACC-10001|">29 - Item Renew Request (ACC-10001)</option>
-              </select>
+      <section id="interop-tab" class="tab-pane space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- SIP2 Adapter -->
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <h3 class="text-sm font-semibold text-zinc-900">3M SIP2 Protocol Adapter</h3>
+              <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">RFC SIP2</span>
             </div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>Raw SIP2 Frame</label>
-              <textarea id="sip2-raw" class="form-control" rows="3">9300CNadmin|COpassword|</textarea>
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">Preset Command Frame</label>
+                <select id="sip2-preset" onchange="document.getElementById('sip2-raw').value = this.value" class="w-full px-3 py-2 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg text-zinc-700 font-mono">
+                  <option value="9300CNadmin|COpassword|">93 - Login Request</option>
+                  <option value="1120240101    120000ABACC-10001|">11 - Item Information (ACC-10001)</option>
+                  <option value="17N20240101    120000AAMEM-101|ABACC-10001|">17 - Item Checkout (Patron MEM-101)</option>
+                  <option value="09N20240101    120000ABACC-10001|">09 - Item Checkin (ACC-10001)</option>
+                  <option value="2920240101    120000ABACC-10001|">29 - Loan Renewal (ACC-10001)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">Raw Frame</label>
+                <textarea id="sip2-raw" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-900 text-zinc-100 rounded-lg border border-zinc-800">9300CNadmin|COpassword|</textarea>
+              </div>
+
+              <button onclick="sendSip2Message()" class="w-full py-2 px-3 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+                Dispatch SIP2 Message
+              </button>
+
+              <div id="sip2-response-box"></div>
             </div>
-            <button class="btn btn-primary" onclick="sendSip2Message()">Dispatch SIP2 Frame</button>
-            <div id="sip2-response-box" style="margin-top: 1rem;"></div>
           </div>
 
-          <div class="card" style="margin-bottom: 0;">
-            <div class="card-title">NCIP 2.0 RESTful Protocol Adapter</div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>Action</label>
-              <select id="ncip-action" class="form-control">
-                <option value="LookupItem">LookupItem</option>
-                <option value="CheckOutItem">CheckOutItem</option>
-                <option value="CheckInItem">CheckInItem</option>
-              </select>
+          <!-- NCIP 2.0 Adapter -->
+          <div class="bg-white rounded-xl border border-zinc-200/80 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <h3 class="text-sm font-semibold text-zinc-900">NCIP 2.0 RESTful Adapter</h3>
+              <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded text-zinc-600">NISO NCIP</span>
             </div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label>JSON Payload</label>
-              <textarea id="ncip-payload" class="form-control" rows="3">{"ItemId": "ACC-10001", "UserId": "MEM-101"}</textarea>
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">NCIP Action</label>
+                <select id="ncip-action" class="w-full px-3 py-2 text-xs bg-zinc-50/50 border border-zinc-200 rounded-lg text-zinc-700 font-medium">
+                  <option value="LookupItem">LookupItem</option>
+                  <option value="CheckOutItem">CheckOutItem</option>
+                  <option value="CheckInItem">CheckInItem</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-zinc-700 mb-1">JSON Envelope Payload</label>
+                <textarea id="ncip-payload" rows="3" class="w-full p-2.5 text-xs font-mono bg-zinc-900 text-emerald-400 rounded-lg border border-zinc-800">{"ItemId": "ACC-10001", "UserId": "MEM-101"}</textarea>
+              </div>
+
+              <button onclick="sendNcipRequest()" class="w-full py-2 px-3 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg transition shadow-sm">
+                Send NCIP 2.0 Request
+              </button>
+
+              <div id="ncip-response-box"></div>
             </div>
-            <button class="btn btn-primary" onclick="sendNcipRequest()">Send NCIP 2.0 Message</button>
-            <div id="ncip-response-box" style="margin-top: 1rem;"></div>
           </div>
         </div>
       </section>
 
       <!-- ================= TAB 6: REPORTS & AUDIT ================= -->
-      <section id="analytics-tab" class="tab-pane">
-        <div class="grid-cards" id="kpi-cards">
-          <!-- Dynamically populated KPI stats -->
+      <section id="analytics-tab" class="tab-pane space-y-6">
+        <!-- Live KPI Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="kpi-cards">
+          <!-- Dynamically Populated -->
         </div>
 
-        <div class="card">
-          <div class="card-title">
-            <span>Immutable System Audit Trail (NFR 02, FR 11)</span>
-            <button class="btn btn-secondary" onclick="loadAuditLogs()">Refresh Audit Trail</button>
+        <!-- Audit Trail Table -->
+        <div class="bg-white rounded-xl border border-zinc-200/80 overflow-hidden shadow-sm space-y-3">
+          <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+            <div>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Immutable Audit Trail (NFR 02, FR 11)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Cryptographic log of all circulation, administrative, and hardware events</p>
+            </div>
+            <button onclick="loadAuditLogs()" class="px-3 py-1.5 text-xs font-medium bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 rounded-lg transition shadow-sm">
+              Refresh Trail
+            </button>
           </div>
-          <div class="table-responsive">
-            <table>
-              <thead>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-zinc-50/80 text-zinc-500 border-b border-zinc-100 font-medium">
                 <tr>
-                  <th>ID</th>
-                  <th>Timestamp</th>
-                  <th>Actor</th>
-                  <th>Action</th>
-                  <th>Entity</th>
-                  <th>Details</th>
+                  <th class="py-3 px-4">#</th>
+                  <th class="py-3 px-4">Timestamp</th>
+                  <th class="py-3 px-4">Actor</th>
+                  <th class="py-3 px-4">Action</th>
+                  <th class="py-3 px-4">Entity</th>
+                  <th class="py-3 px-4">Payload Details</th>
                 </tr>
               </thead>
-              <tbody id="audit-logs-body">
-                <!-- Dynamically populated -->
+              <tbody id="audit-logs-body" class="divide-y divide-zinc-100 font-mono text-[11px] text-zinc-600">
+                <!-- Dynamically Populated -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
+
     </div>
   </main>
+
+  <!-- Spine Label Preview Modal -->
+  <div id="spine-modal" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-zinc-200 shadow-2xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+        <h3 class="text-sm font-semibold text-zinc-900">Thermal Spine Sticker Preview</h3>
+        <button onclick="closeSpineModal()" class="text-zinc-400 hover:text-zinc-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-4 bg-zinc-50 border border-dashed border-zinc-300 rounded-lg font-mono text-xs space-y-1.5 text-zinc-800 text-center" id="spine-modal-content">
+        <!-- Spine text rendered here -->
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeSpineModal()" class="px-3 py-1.5 text-xs text-zinc-600 hover:bg-zinc-100 rounded-lg">Close</button>
+        <button onclick="window.print()" class="px-3 py-1.5 text-xs bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-lg">Print Sticker</button>
+      </div>
+    </div>
+  </div>
 
   <script src="/app.js"></script>
 </body>

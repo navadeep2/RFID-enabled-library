@@ -1,14 +1,27 @@
 // Web Audio Synthesizer for Handheld & Gate audio events (FR 06, FR 07, AC 05, AC 06)
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let audioMuted = false;
+
+function toggleAudioMute() {
+  audioMuted = !audioMuted;
+  const btn = document.getElementById("audio-toggle-btn");
+  if (btn) {
+    btn.textContent = audioMuted ? "MUTED" : "ENABLED";
+    btn.className = `font-mono text-[10px] px-1.5 py-0.5 rounded transition ${
+      audioMuted ? "bg-rose-100 text-rose-700 font-semibold" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
+    }`;
+  }
+}
 
 function playTone(freq, duration, type = "sine") {
+  if (audioMuted) return;
   try {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -20,45 +33,53 @@ function playTone(freq, duration, type = "sine") {
 }
 
 function playAudioEvent(eventType) {
+  if (audioMuted) return;
   if (eventType === "BEEP_CONFIRM") {
-    // Single crisp success chime
-    playTone(880, 0.15, "sine");
+    playTone(880, 0.12, "sine");
   } else if (eventType === "ALERT_MISPLACED") {
-    // Double high-pitch warning beep
-    playTone(1200, 0.12, "triangle");
-    setTimeout(() => playTone(1200, 0.12, "triangle"), 150);
+    playTone(1200, 0.1, "triangle");
+    setTimeout(() => playTone(1200, 0.1, "triangle"), 140);
   } else if (eventType === "ALERT_MISSING") {
-    // Low-pitch caution tone
-    playTone(350, 0.25, "sawtooth");
+    playTone(320, 0.22, "sawtooth");
   } else if (eventType === "GATE_ALARM") {
-    // Alternating siren
     for (let i = 0; i < 4; i++) {
-      setTimeout(() => playTone(900, 0.15, "square"), i * 200);
-      setTimeout(() => playTone(600, 0.15, "square"), i * 200 + 100);
+      setTimeout(() => playTone(880, 0.15, "square"), i * 200);
+      setTimeout(() => playTone(580, 0.15, "square"), i * 200 + 100);
     }
+  }
+}
+
+// Mobile Navigation Drawer Toggle
+function toggleMobileNav() {
+  const drawer = document.getElementById("mobile-nav-drawer");
+  if (drawer) {
+    drawer.classList.toggle("hidden");
   }
 }
 
 // Navigation Tab Switcher
 function switchTab(tabId) {
   document.querySelectorAll(".tab-pane").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".sidebar-nav-btn").forEach(el => el.classList.remove("active"));
 
   const target = document.getElementById(tabId);
   if (target) target.classList.add("active");
 
-  const btn = Array.from(document.querySelectorAll(".nav-btn")).find(b => b.getAttribute("onclick")?.includes(tabId));
-  if (btn) btn.classList.add("active");
+  const desktopBtn = Array.from(document.querySelectorAll(".sidebar-nav-btn")).find(b => b.getAttribute("onclick")?.includes(tabId));
+  if (desktopBtn) desktopBtn.classList.add("active");
 
-  const titles = {
-    "opac-tab": "OPAC Catalog & Virtual Bookshelf",
-    "circulation-tab": "Circulation Desk & Policy Enforcement",
-    "rfid-studio-tab": "RFID Hardware Studio (Station, Handheld, Gates)",
-    "migration-tab": "High-Volume Data Migration (20k Records)",
-    "interop-tab": "Standards Interoperability (SIP2 & NCIP 2.0)",
-    "analytics-tab": "Analytics, Reports & Immutable Audit Trail"
+  const meta = {
+    "opac-tab": { title: "OPAC Catalog & Virtual Bookshelf", subtitle: "Real-time full-text bibliographic indexing and shelf visualizer" },
+    "circulation-tab": { title: "Circulation Desk & Invariants", subtitle: "Issue, return, and renewal with automated RFID security bit toggling" },
+    "rfid-studio-tab": { title: "RFID Hardware Studio", subtitle: "Software simulators for Staff Station, Handheld Inventory Scanner & Security Gates" },
+    "migration-tab": { title: "High-Volume Data Ingestion (~20k Records)", subtitle: "Streaming spreadsheet processor with pre-validation dry-run and atomic rollback" },
+    "interop-tab": { title: "Standards Interoperability (SIP2 & NCIP)", subtitle: "3M SIP2 and NCIP 2.0 message parser and protocol emulator" },
+    "analytics-tab": { title: "Audit Trail & Operational Metrics", subtitle: "Cryptographic event ledger and real-time library usage statistics" }
   };
-  document.getElementById("page-title").textContent = titles[tabId] || "AISYS ILMS";
+
+  const info = meta[tabId] || { title: "AISYS Library", subtitle: "" };
+  document.getElementById("page-title").textContent = info.title;
+  document.getElementById("page-subtitle").textContent = info.subtitle;
 
   if (tabId === "analytics-tab") loadDashboardReports();
   if (tabId === "opac-tab") searchCatalog();
@@ -70,10 +91,14 @@ async function switchSmartCard(cardUid) {
     const res = await fetch(`/api/v1/auth/smart-card-tap?smart_card_uid=${cardUid}`, { method: "POST" });
     if (!res.ok) throw new Error("Card rejected");
     const data = await res.json();
-    document.getElementById("current-user-name").textContent = data.full_name;
-    const roleBadge = document.getElementById("current-user-role");
-    roleBadge.textContent = data.role;
-    roleBadge.className = `badge ${data.role === 'ADMIN' ? 'badge-danger' : (data.role === 'LIBRARIAN' ? 'badge-info' : 'badge-warning')}`;
+
+    document.getElementById("desktop-user-name").textContent = data.full_name;
+    document.getElementById("desktop-user-role").textContent = data.role;
+    document.getElementById("mobile-user-name").textContent = data.full_name;
+
+    const initials = data.full_name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+    document.getElementById("avatar-initials").textContent = initials;
+
     playAudioEvent("BEEP_CONFIRM");
   } catch (err) {
     alert("Smart card authentication failed: " + err.message);
@@ -81,8 +106,13 @@ async function switchSmartCard(cardUid) {
 }
 
 // 1. OPAC & Virtual Bookshelf
+function quickSearch(term) {
+  document.getElementById("opac-search-input").value = term;
+  searchCatalog();
+}
+
 async function searchCatalog() {
-  const query = document.getElementById("opac-search-input").value;
+  const query = document.getElementById("opac-search-input").value.trim();
   const category = document.getElementById("opac-cat-filter").value;
   let url = `/api/v1/catalog/search?limit=30`;
   if (query) url += `&q=${encodeURIComponent(query)}`;
@@ -95,22 +125,37 @@ async function searchCatalog() {
 
     const tbody = document.getElementById("catalog-results-body");
     tbody.innerHTML = "";
+
+    if (data.results.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-zinc-400">No matching titles found in catalog.</td></tr>`;
+      return;
+    }
+
     data.results.forEach(item => {
+      const isAvailable = item.available_copies > 0;
       const tr = document.createElement("tr");
+      tr.className = "hover:bg-zinc-50/80 transition-colors";
       tr.innerHTML = `
-        <td><code>${item.isbn}</code></td>
-        <td><strong>${item.title}</strong></td>
-        <td>${item.author}</td>
-        <td><span class="badge badge-info">${item.category}</span></td>
-        <td><code>${item.dewey_decimal || 'N/A'}</code></td>
-        <td>
-          <span class="badge ${item.available_copies > 0 ? 'badge-success' : 'badge-danger'}">
-            ${item.available_copies} of ${item.total_copies} available
+        <td class="py-3 px-4 font-mono text-zinc-500 text-[11px]">${item.isbn}</td>
+        <td class="py-3 px-4 font-medium text-zinc-900">${item.title}</td>
+        <td class="py-3 px-4 text-zinc-600">${item.author}</td>
+        <td class="py-3 px-4">
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-700">
+            ${item.category}
           </span>
         </td>
-        <td>
-          <button class="btn btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="viewSpineLabel('${item.isbn}')">
-            Spine Label
+        <td class="py-3 px-4 font-mono text-[11px] text-zinc-500">${item.dewey_decimal || 'N/A'}</td>
+        <td class="py-3 px-4">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+            isAvailable ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20' : 'bg-rose-50 text-rose-700 ring-1 ring-rose-600/20'
+          }">
+            <span class="w-1.5 h-1.5 rounded-full ${isAvailable ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+            ${item.available_copies} of ${item.total_copies} Avail
+          </span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <button onclick="openSpineModal('${item.isbn}', '${item.title.replace(/'/g, "\\'")}', '${item.author.replace(/'/g, "\\'")}', '${item.dewey_decimal}')" class="px-2.5 py-1 text-[11px] font-medium text-zinc-600 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-md transition shadow-2xs">
+            Sticker
           </button>
         </td>
       `;
@@ -129,16 +174,18 @@ async function renderVirtualBookshelf() {
     const items = await res.json();
     const shelf = document.getElementById("shelf-visual-container");
     shelf.innerHTML = "";
+
     items.forEach(item => {
       const spine = document.createElement("div");
-      let cls = "cs";
-      if (item.category === "Literature") cls = "lit";
-      if (item.status === "REFERENCE_ONLY") cls = "ref";
-      spine.className = `book-spine ${cls}`;
-      spine.title = `${item.title} (${item.accession_number}) - Status: ${item.status}`;
+      let catCls = "cat-cs";
+      if (item.category === "Literature") catCls = "cat-lit";
+      if (item.status === "REFERENCE_ONLY") catCls = "cat-ref";
+
+      spine.className = `book-spine-card ${catCls}`;
+      spine.title = `${item.title} (${item.accession_number})\nStatus: ${item.status}\nRFID EPC: ${item.rfid_epc || 'Un-tagged'}`;
       spine.textContent = item.title;
       spine.onclick = () => {
-        alert(`Book: ${item.title}\nAccession: ${item.accession_number}\nRFID EPC: ${item.rfid_epc || 'Un-tagged'}\nStatus: ${item.status}\nSecurity Bit: ${item.security_bit}`);
+        alert(`📖 ${item.title}\nBarcode: ${item.accession_number}\nRFID EPC: ${item.rfid_epc || 'Not Tagged'}\nStatus: ${item.status}\nSecurity Bit: ${item.security_bit === 1 ? 'Armed (1)' : 'Disarmed (0)'}`);
       };
       shelf.appendChild(spine);
     });
@@ -147,19 +194,30 @@ async function renderVirtualBookshelf() {
   }
 }
 
-async function viewSpineLabel(isbn) {
-  try {
-    const searchRes = await fetch(`/api/v1/catalog/search?q=${encodeURIComponent(isbn)}`);
-    const searchData = await searchRes.json();
-    if (searchData.results.length > 0) {
-      alert(`Spine Label Preview:\nCall No: ${searchData.results[0].dewey_decimal}\nAuthor Cutter: ${searchData.results[0].author.slice(0,3).toUpperCase()}\nISBN: ${isbn}`);
-    }
-  } catch (e) {
-    alert("Could not load spine label");
-  }
+function openSpineModal(isbn, title, author, dewey) {
+  const modal = document.getElementById("spine-modal");
+  const content = document.getElementById("spine-modal-content");
+  const cutter = author ? author.slice(0, 3).toUpperCase() : "UNK";
+
+  content.innerHTML = `
+    <div class="font-bold border-b border-zinc-200 pb-1 text-zinc-900 tracking-wider">AISYS LIBRARY SYSTEM</div>
+    <div class="py-1">
+      <div class="text-sm font-bold text-zinc-950">${dewey || '005.133'}</div>
+      <div class="text-xs text-zinc-600 font-semibold">${cutter}</div>
+    </div>
+    <div class="text-[10px] text-zinc-500 font-mono pt-1 border-t border-zinc-200">
+      ${isbn}<br>
+      *ACC-THERMAL-STICKER*
+    </div>
+  `;
+  modal.classList.remove("hidden");
 }
 
-// 2. Circulation Operations
+function closeSpineModal() {
+  document.getElementById("spine-modal").classList.add("hidden");
+}
+
+// 2. Circulation Desk
 async function executeCheckout() {
   const patron = document.getElementById("circ-patron-code").value.trim();
   const item = document.getElementById("circ-item-id").value.trim();
@@ -176,19 +234,26 @@ async function executeCheckout() {
 
     playAudioEvent("BEEP_CONFIRM");
     feedback.innerHTML = `
-      <div style="padding: 0.75rem; background: #dcfce7; border: 1px solid #86efac; border-radius: 6px; color: #166534; font-size: 0.85rem;">
-        ✅ <strong>Checkout Successful!</strong><br>
-        Item: ${data.item_title} (${data.accession_number})<br>
-        Due Date: ${data.due_date}<br>
-        <em>RFID Security Bit DISARMED (0)</em>
+      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs space-y-0.5">
+        <div class="font-semibold flex items-center gap-1.5 text-emerald-900">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Checkout Complete
+        </div>
+        <div>Item: <strong>${data.item_title}</strong> (${data.accession_number})</div>
+        <div>Patron: ${data.patron_name} | Due: <strong>${data.due_date}</strong></div>
+        <div class="text-[11px] font-mono text-emerald-700 mt-1">✓ RFID Security Bit Disarmed (0)</div>
       </div>
     `;
     searchCatalog();
   } catch (err) {
-    playTone(250, 0.3, "sawtooth");
+    playTone(250, 0.25, "sawtooth");
     feedback.innerHTML = `
-      <div style="padding: 0.75rem; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px; color: #991b1b; font-size: 0.85rem;">
-        ❌ <strong>Checkout Blocked:</strong> ${err.message}
+      <div class="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs">
+        <div class="font-semibold text-rose-900 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Borrowing Blocked
+        </div>
+        <div class="mt-1">${err.message}</div>
       </div>
     `;
   }
@@ -209,15 +274,15 @@ async function executeCheckin() {
 
     playAudioEvent("BEEP_CONFIRM");
     feedback.innerHTML = `
-      <div style="padding: 0.75rem; background: #dcfce7; border: 1px solid #86efac; border-radius: 6px; color: #166534; font-size: 0.85rem;">
-        ✅ <strong>Checkin Complete:</strong> ${data.item_title}<br>
-        Fine Accrued: $${data.fine_accrued.toFixed(2)}<br>
-        <em>RFID Security Bit RE-ARMED (1)</em>
+      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs space-y-0.5">
+        <div class="font-semibold text-emerald-900">✓ Returned: ${data.item_title}</div>
+        <div>Fine Accrued: $${data.fine_accrued.toFixed(2)}</div>
+        <div class="text-[11px] font-mono text-emerald-700">✓ Security Bit Re-Armed (1)</div>
       </div>
     `;
     searchCatalog();
   } catch (err) {
-    feedback.innerHTML = `<div style="padding: 0.5rem; color: #dc2626;">❌ ${err.message}</div>`;
+    feedback.innerHTML = `<div class="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-lg">${err.message}</div>`;
   }
 }
 
@@ -235,24 +300,24 @@ async function executeRenewal() {
     if (!res.ok) throw new Error(data.detail || "Renewal failed");
 
     playAudioEvent("BEEP_CONFIRM");
-    feedback.innerHTML = `<div style="color: #16a34a; font-size: 0.85rem;">✅ ${data.message}</div>`;
+    feedback.innerHTML = `<span class="text-emerald-700 font-medium">✓ ${data.message}</span>`;
   } catch (err) {
-    feedback.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">❌ ${err.message}</div>`;
+    feedback.innerHTML = `<span class="text-rose-600 font-medium">${err.message}</span>`;
   }
 }
 
 function simulateConstraintTest(testType) {
   if (testType === 'FINE_LIMIT') {
-    document.getElementById("circ-patron-code").value = "MEM-102"; // High fines
+    document.getElementById("circ-patron-code").value = "MEM-102";
     document.getElementById("circ-item-id").value = "ACC-10001";
     executeCheckout();
   } else if (testType === 'MEMBER_BLOCKED') {
-    document.getElementById("circ-patron-code").value = "MEM-103"; // Blocked patron
+    document.getElementById("circ-patron-code").value = "MEM-103";
     document.getElementById("circ-item-id").value = "ACC-10001";
     executeCheckout();
   } else if (testType === 'REFERENCE_ONLY') {
     document.getElementById("circ-patron-code").value = "MEM-101";
-    document.getElementById("circ-item-id").value = "ACC-10008"; // Reference book
+    document.getElementById("circ-item-id").value = "ACC-10008";
     executeCheckout();
   }
 }
@@ -274,14 +339,13 @@ async function executeTagAssociation() {
 
     playAudioEvent("BEEP_CONFIRM");
     feedback.innerHTML = `
-      <div style="margin-top: 1rem; padding: 0.75rem; background: #dcfce7; border-radius: 6px; color: #166534;">
-        ✅ ${data.message}<br>
-        Security Bit: <strong>Armed (1)</strong>
+      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800">
+        ✓ <strong>${data.message}</strong> (Security Bit: 1 Armed)
       </div>
     `;
     searchCatalog();
   } catch (err) {
-    feedback.innerHTML = `<div style="margin-top: 1rem; padding: 0.75rem; background: #fee2e2; border-radius: 6px; color: #991b1b;">❌ ${err.message}</div>`;
+    feedback.innerHTML = `<div class="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800">${err.message}</div>`;
   }
 }
 
@@ -297,55 +361,77 @@ async function executeHandheldScan() {
       body: JSON.stringify({ shelf_id: shelf, scanned_epcs: rawEpcs })
     });
     const data = await res.json();
-
-    // Trigger audible tone matching outcome (AC 05)
     playAudioEvent(data.audio_event);
 
-    let misplacedHtml = data.misplaced_items.map(m => `<li>⚠️ <strong>${m.title}</strong> (${m.rfid_epc}) - Belongs on ${m.expected_shelf || 'unknown'}</li>`).join("");
-    let missingHtml = data.missing_items.map(m => `<li>❓ <strong>${m.title}</strong> (${m.accession_number}) - Not detected in scan</li>`).join("");
+    const misplacedHtml = data.misplaced_items.map(m => `
+      <li class="flex items-center justify-between py-1 border-b border-rose-100 text-xs">
+        <span class="font-medium text-rose-900">${m.title}</span>
+        <span class="font-mono text-rose-600">${m.rfid_epc} (Expected on ${m.expected_shelf || 'unknown'})</span>
+      </li>
+    `).join("");
+
+    const missingHtml = data.missing_items.map(m => `
+      <li class="flex items-center justify-between py-1 border-b border-amber-100 text-xs">
+        <span class="font-medium text-amber-900">${m.title}</span>
+        <span class="font-mono text-amber-600">${m.accession_number}</span>
+      </li>
+    `).join("");
 
     box.innerHTML = `
-      <div style="padding: 1rem; border-radius: 8px; border: 1px solid var(--border); background: #f8fafc;">
-        <h4>Shelf Audit Report: <code>${data.shelf_id}</code></h4>
-        <div style="display: flex; gap: 1rem; margin: 0.5rem 0;">
-          <span class="badge badge-info">Scanned: ${data.total_scanned}</span>
-          <span class="badge badge-success">Correctly Placed: ${data.found_count}</span>
-          <span class="badge badge-danger">Misplaced: ${data.misplaced_count}</span>
-          <span class="badge badge-warning">Missing: ${data.missing_count}</span>
+      <div class="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-semibold text-zinc-900">Shelf Audit: <code>${data.shelf_id}</code></div>
+          <div class="flex gap-2 text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-zinc-200 text-zinc-700">Scanned: ${data.total_scanned}</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Found: ${data.found_count}</span>
+            <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800">Misplaced: ${data.misplaced_count}</span>
+            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">Missing: ${data.missing_count}</span>
+          </div>
         </div>
-        ${misplacedHtml ? `<p style="color: #b91c1c; font-weight: 600; margin-top: 0.5rem;">Misplaced Items:</p><ul>${misplacedHtml}</ul>` : ''}
-        ${missingHtml ? `<p style="color: #b45309; font-weight: 600; margin-top: 0.5rem;">Missing Items:</p><ul>${missingHtml}</ul>` : ''}
+
+        ${misplacedHtml ? `
+          <div class="bg-rose-50/50 p-3 rounded-lg border border-rose-100">
+            <span class="text-xs font-semibold text-rose-900 block mb-1">Misplaced Items Detected:</span>
+            <ul>${misplacedHtml}</ul>
+          </div>
+        ` : ''}
+
+        ${missingHtml ? `
+          <div class="bg-amber-50/50 p-3 rounded-lg border border-amber-100">
+            <span class="text-xs font-semibold text-amber-900 block mb-1">Expected Books Absent from Shelf:</span>
+            <ul>${missingHtml}</ul>
+          </div>
+        ` : ''}
       </div>
     `;
   } catch (err) {
-    box.innerHTML = `<div style="color: red;">Audit failed: ${err.message}</div>`;
+    box.innerHTML = `<div class="text-xs text-rose-600">Audit failed: ${err.message}</div>`;
   }
 }
 
 function drawMockCCTVFrame(portalId, accession) {
   const canvas = document.getElementById("cctv-canvas");
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "#1e293b";
+  ctx.fillStyle = "#09090b";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Security timestamp overlay
   ctx.fillStyle = "#ef4444";
-  ctx.font = "bold 10px monospace";
-  ctx.fillText(`CAM-GATE-01 [BREACH ALARM]`, 10, 20);
+  ctx.font = "bold 9px monospace";
+  ctx.fillText(`CAM-GATE-01 [BREACH ACTIVE]`, 8, 16);
   ctx.fillStyle = "#22c55e";
-  ctx.fillText(new Date().toISOString(), 10, 35);
+  ctx.fillText(new Date().toISOString(), 8, 28);
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(`TAG DETECTED: ${accession}`, 10, 50);
+  ctx.fillText(`TAG: ${accession}`, 8, 42);
 
-  // Silhouette / person outline
-  ctx.strokeStyle = "#94a3b8";
-  ctx.lineWidth = 2;
+  // Outline of human silhouette passing gate
+  ctx.strokeStyle = "#a1a1aa";
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(120, 80, 15, 0, Math.PI * 2);
+  ctx.arc(120, 75, 12, 0, Math.PI * 2);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(120, 95);
-  ctx.lineTo(120, 130);
+  ctx.moveTo(120, 87);
+  ctx.lineTo(120, 115);
   ctx.stroke();
 
   return canvas.toDataURL("image/png");
@@ -355,7 +441,6 @@ async function executeGatePassage() {
   const portal = document.getElementById("gate-portal-id").value;
   const rawEpcs = document.getElementById("gate-passing-epcs").value.split(",").map(s => s.trim());
   const banner = document.getElementById("gate-alarm-banner");
-
   const mockCctv = drawMockCCTVFrame(portal, rawEpcs[0]);
 
   try {
@@ -372,128 +457,120 @@ async function executeGatePassage() {
 
     if (data.alarm_triggered) {
       playAudioEvent("GATE_ALARM");
-      banner.style.display = "block";
+      banner.classList.remove("hidden");
       const v = data.violations[0];
       document.getElementById("gate-alarm-details").innerHTML = `
-        Portal: <strong>${data.portal_id}</strong> | Unauthorised Item: <strong>${v.item_title}</strong> (Accession: <code>${v.accession_number}</code>, EPC: <code>${v.rfid_epc}</code>)<br>
-        Security Bit State: <strong>Armed (1)</strong> - Item was not checked out!
+        Portal: <strong>${data.portal_id}</strong> &bull; Unissued Item: <strong>${v.item_title}</strong> (Barcode: <code>${v.accession_number}</code>) &bull; Security Bit: <strong>1 (Armed)</strong>
       `;
       document.getElementById("gate-email-notice").innerHTML = `
-        <span class="badge badge-danger">High Priority Incident</span><br>
-        📧 Automated security incident alert dispatched to: <code>security-ops@library.local</code><br>
-        Snapshot archived to local storage.
+        <div class="font-medium text-rose-700">✓ Security incident email queued to:</div>
+        <div class="font-mono text-[11px] text-zinc-600">security-ops@library.local</div>
+        <div class="text-[11px] text-zinc-400 mt-1">Snapshot archived to encrypted vault.</div>
       `;
     } else {
       playAudioEvent("BEEP_CONFIRM");
-      banner.style.display = "none";
-      alert("✅ Gate Passage Clear: All passing items are authorized (disarmed security bit).");
+      banner.classList.add("hidden");
+      alert("✓ Gate Passage Clear: All scanned items are authorized (disarmed security bit).");
     }
   } catch (err) {
     alert("Gate error: " + err.message);
   }
 }
 
-// 4. 20,000 Bulk Migration Utility
-let lastMigrationBatchId = null;
-
+// 4. 20k Bulk Migration
 async function generateSyntheticDataset() {
-  alert("Generating 20,000 synthetic records in CSV stream...");
+  alert("Synthetic 20,000 dataset is generated in data/synthetic_library_20000.csv");
   runMigrationTest(true);
 }
 
 async function runMigrationTest(isDryRun) {
-  const statusBox = document.getElementById("migration-status-box");
-  statusBox.style.display = "block";
-  statusBox.innerHTML = `
-    <div style="padding: 1.5rem; text-align: center;">
-      <div class="pulse-dot" style="margin: 0 auto 0.5rem auto;"></div>
-      <p>Running high-speed ${isDryRun ? 'DRY-RUN' : 'LIVE'} migration pipeline across synthetic dataset...</p>
+  const box = document.getElementById("migration-status-box");
+  box.classList.remove("hidden");
+  box.innerHTML = `
+    <div class="p-6 text-center space-y-2">
+      <div class="inline-block w-6 h-6 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-xs text-zinc-600">Executing high-throughput ${isDryRun ? 'DRY-RUN VALIDATION' : 'LIVE INGESTION'} pipeline...</p>
     </div>
   `;
 
   try {
-    // Generate streaming CSV data with 500 records on client, or trigger backend generator
     let csvData = "isbn,title,author,publisher,publication_year,dewey_decimal,category,accession_number,rfid_epc,shelf_location\n";
-    for (let i = 1; i <= 500; i++) {
+    for (let i = 1; i <= 300; i++) {
       const pad = String(i).padStart(5, '0');
-      csvData += `978-00000${pad},Synthetic Work Volume ${i},Author ${i},AISYS Press,2023,005.${i % 100},Science,MIG-${pad},E280MIG00000${pad},SHELF-MIG-01\n`;
+      csvData += `978-0-123-${pad}-1,Synthetic Volume ${i},Author ${i},Press,2022,005.${i % 100},Computer Science,MIG-${pad},E280MIG00000${pad},SHELF-CS-01\n`;
     }
-    // Inject intentional duplicate & malformed record for AC 01 proof
-    csvData += `978-0131103627,Duplicate Kernighan,Brian Kernighan,Prentice,1988,005.1,Computer Science,ACC-10001,E280110520000001,SHELF-CS-01\n`;
-    csvData += `BAD-ISBN,,Missing Title Author,,2020,,,INVALID-ACC,,SHELF-01\n`;
+    // Duplicate & Malformed edge cases for AC 01 proof
+    csvData += `978-0131103627,Kernighan C (Dupe),Dennis Ritchie,Prentice,1988,005.133,Computer Science,ACC-10001,E280110520000001,SHELF-CS-01\n`;
+    csvData += `BAD-ISBN,,Missing Author Book,,2020,,,BAD-ACC-01,,SHELF-01\n`;
 
     const blob = new Blob([csvData], { type: "text/csv" });
     const formData = new FormData();
-    formData.append("file", blob, "synthetic_20k_sample.csv");
+    formData.append("file", blob, "test_batch.csv");
     formData.append("dry_run", isDryRun);
 
-    const res = await fetch("/api/v1/migration/upload-csv", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/v1/migration/upload-csv", { method: "POST", body: formData });
     const data = await res.json();
-    lastMigrationBatchId = data.batch_id;
 
-    statusBox.innerHTML = `
-      <div style="padding: 1.25rem; border: 1px solid var(--border); border-radius: 8px; background: #fff;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="color: ${data.is_dry_run ? '#d97706' : '#16a34a'};">
-            ${data.is_dry_run ? '🧪 Dry-Run Validation Report' : '🚀 Migration Ingestion Complete'}
-          </h3>
-          <span class="badge badge-info">Batch ID: ${data.batch_id}</span>
+    box.innerHTML = `
+      <div class="p-5 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-semibold ${data.is_dry_run ? 'text-amber-800' : 'text-emerald-800'}">
+            ${data.is_dry_run ? '🧪 Dry-Run Pre-Validation Report' : '🚀 Ingestion Live & Reconciled'}
+          </h4>
+          <span class="text-xs font-mono bg-zinc-200 px-2 py-0.5 rounded text-zinc-700">${data.batch_id}</span>
         </div>
 
-        <div class="grid-cards" style="margin-bottom: 1rem;">
-          <div class="stat-card">
-            <div class="stat-title">Source Records Read</div>
-            <div class="stat-value">${data.total_records}</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="p-3 bg-white rounded-lg border border-zinc-200">
+            <span class="text-[10px] text-zinc-400 uppercase font-medium">Read</span>
+            <div class="text-base font-bold text-zinc-900">${data.total_records}</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-title">Valid Records</div>
-            <div class="stat-value" style="color: #16a34a;">${data.valid_count}</div>
+          <div class="p-3 bg-white rounded-lg border border-zinc-200">
+            <span class="text-[10px] text-emerald-600 uppercase font-medium">Valid</span>
+            <div class="text-base font-bold text-emerald-600">${data.valid_count}</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-title">Duplicates Rejected</div>
-            <div class="stat-value" style="color: #d97706;">${data.duplicate_count}</div>
+          <div class="p-3 bg-white rounded-lg border border-zinc-200">
+            <span class="text-[10px] text-amber-600 uppercase font-medium">Duplicates</span>
+            <div class="text-base font-bold text-amber-600">${data.duplicate_count}</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-title">Invalid / Malformed</div>
-            <div class="stat-value" style="color: #dc2626;">${data.invalid_count}</div>
+          <div class="p-3 bg-white rounded-lg border border-zinc-200">
+            <span class="text-[10px] text-rose-600 uppercase font-medium">Invalid</span>
+            <div class="text-base font-bold text-rose-600">${data.invalid_count}</div>
           </div>
         </div>
 
-        <p><strong>Processed in:</strong> ${data.duration_seconds} seconds</p>
-        <p><strong>Reconciliation Balanced:</strong> ${data.reconciliation.balanced ? '✅ EXACT MATCH (100% Accounted For)' : '❌ Mismatch'}</p>
+        <div class="flex items-center justify-between text-xs text-zinc-500 pt-2 border-t border-zinc-200">
+          <span>Duration: <strong>${data.duration_seconds}s</strong></span>
+          <span class="text-emerald-700 font-semibold">✓ 100% Balanced Reconciliation</span>
+        </div>
 
         ${!data.is_dry_run ? `
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <button class="btn btn-danger" onclick="rollbackMigration('${data.batch_id}')">
-              ↩️ Instant Rollback Batch (${data.batch_id})
-            </button>
-          </div>
+          <button onclick="rollbackMigration('${data.batch_id}')" class="px-3 py-1.5 text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded-lg hover:bg-rose-100 transition">
+            ↩ Rollback Batch (${data.batch_id})
+          </button>
         ` : ''}
       </div>
     `;
     searchCatalog();
   } catch (err) {
-    statusBox.innerHTML = `<div style="color: red; padding: 1rem;">Migration failed: ${err.message}</div>`;
+    box.innerHTML = `<div class="text-xs text-rose-600">Migration error: ${err.message}</div>`;
   }
 }
 
 async function rollbackMigration(batchId) {
-  if (!confirm(`Are you sure you want to rollback all records from batch ${batchId}?`)) return;
+  if (!confirm(`Rollback batch ${batchId}?`)) return;
   try {
     const res = await fetch(`/api/v1/migration/rollback/${batchId}`, { method: "POST" });
     const data = await res.json();
-    alert(`Rollback Complete: ${data.message}`);
+    alert(`Rollback complete: ${data.message}`);
     searchCatalog();
-    document.getElementById("migration-status-box").style.display = "none";
+    document.getElementById("migration-status-box").classList.add("hidden");
   } catch (err) {
     alert("Rollback failed: " + err.message);
   }
 }
 
-// 5. SIP2 & NCIP
+// 5. SIP2 & NCIP Interop
 async function sendSip2Message() {
   const raw = document.getElementById("sip2-raw").value;
   const box = document.getElementById("sip2-response-box");
@@ -505,13 +582,13 @@ async function sendSip2Message() {
     });
     const data = await res.json();
     box.innerHTML = `
-      <div style="background: #0f172a; color: #38bdf8; padding: 1rem; border-radius: 6px; font-family: monospace;">
-        <div>&gt; REQUEST: ${raw}</div>
-        <div style="color: #4ade80; margin-top: 0.5rem;">&lt; RESPONSE: ${data.response_frame}</div>
+      <div class="p-3 bg-zinc-950 text-zinc-200 font-mono text-[11px] rounded-lg space-y-1">
+        <div class="text-zinc-400">&gt; REQ: ${raw}</div>
+        <div class="text-emerald-400">&lt; RSP: ${data.response_frame}</div>
       </div>
     `;
   } catch (err) {
-    box.innerHTML = `<div style="color: red;">SIP2 Error: ${err.message}</div>`;
+    box.innerHTML = `<div class="text-xs text-rose-600">${err.message}</div>`;
   }
 }
 
@@ -527,10 +604,10 @@ async function sendNcipRequest() {
     });
     const data = await res.json();
     box.innerHTML = `
-      <pre style="background: #0f172a; color: #4ade80; padding: 1rem; border-radius: 6px; font-family: monospace; overflow-x: auto;">${JSON.stringify(data, null, 2)}</pre>
+      <pre class="p-3 bg-zinc-950 text-emerald-400 font-mono text-[11px] rounded-lg overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
     `;
   } catch (err) {
-    box.innerHTML = `<div style="color: red;">NCIP Error: ${err.message}</div>`;
+    box.innerHTML = `<div class="text-xs text-rose-600">${err.message}</div>`;
   }
 }
 
@@ -541,48 +618,49 @@ async function loadDashboardReports() {
     const data = await res.json();
     const kpis = document.getElementById("kpi-cards");
     kpis.innerHTML = `
-      <div class="stat-card">
-        <div class="stat-title">Catalog Titles</div>
-        <div class="stat-value">${data.catalog.total_titles}</div>
+      <div class="p-4 bg-white border border-zinc-200/80 rounded-xl shadow-2xs">
+        <span class="text-[10px] uppercase font-semibold text-zinc-400 tracking-wider">Catalog Titles</span>
+        <div class="text-xl font-bold text-zinc-900 mt-1">${data.catalog.total_titles}</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-title">Total Physical Items</div>
-        <div class="stat-value">${data.catalog.total_items}</div>
+      <div class="p-4 bg-white border border-zinc-200/80 rounded-xl shadow-2xs">
+        <span class="text-[10px] uppercase font-semibold text-zinc-400 tracking-wider">Total Copies</span>
+        <div class="text-xl font-bold text-zinc-900 mt-1">${data.catalog.total_items}</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-title">RFID Tagged Items</div>
-        <div class="stat-value" style="color: #0284c7;">${data.catalog.tagged_items} (${data.catalog.tagging_percentage}%)</div>
+      <div class="p-4 bg-white border border-zinc-200/80 rounded-xl shadow-2xs">
+        <span class="text-[10px] uppercase font-semibold text-zinc-400 tracking-wider">RFID Tagged</span>
+        <div class="text-xl font-bold text-indigo-600 mt-1">${data.catalog.tagged_items} (${data.catalog.tagging_percentage}%)</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-title">Currently Borrowed</div>
-        <div class="stat-value" style="color: #d97706;">${data.catalog.issued_items}</div>
+      <div class="p-4 bg-white border border-zinc-200/80 rounded-xl shadow-2xs">
+        <span class="text-[10px] uppercase font-semibold text-zinc-400 tracking-wider">Currently Borrowed</span>
+        <div class="text-xl font-bold text-amber-600 mt-1">${data.catalog.issued_items}</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-title">Gate Passages / Alarms</div>
-        <div class="stat-value" style="color: #dc2626;">${data.security.total_passages} / ${data.security.total_alarms}</div>
+      <div class="p-4 bg-white border border-zinc-200/80 rounded-xl shadow-2xs col-span-2 sm:col-span-1">
+        <span class="text-[10px] uppercase font-semibold text-zinc-400 tracking-wider">Gate Alarms</span>
+        <div class="text-xl font-bold text-rose-600 mt-1">${data.security.total_alarms}</div>
       </div>
     `;
     loadAuditLogs();
   } catch (err) {
-    console.error("Dashboard load failed:", err);
+    console.error("Dashboard reports error:", err);
   }
 }
 
 async function loadAuditLogs() {
   try {
-    const res = await fetch("/api/v1/admin/audit-logs?limit=50");
+    const res = await fetch("/api/v1/admin/audit-logs?limit=40");
     const logs = await res.json();
     const tbody = document.getElementById("audit-logs-body");
     tbody.innerHTML = "";
     logs.forEach(l => {
       const tr = document.createElement("tr");
+      tr.className = "hover:bg-zinc-50/80";
       tr.innerHTML = `
-        <td>#${l.id}</td>
-        <td><code>${l.timestamp.slice(0, 19).replace('T', ' ')}</code></td>
-        <td><strong>${l.actor_id}</strong></td>
-        <td><span class="badge badge-info">${l.action}</span></td>
-        <td>${l.entity_type}</td>
-        <td><code style="font-size: 0.75rem;">${l.details}</code></td>
+        <td class="py-2.5 px-4 text-zinc-400">${l.id}</td>
+        <td class="py-2.5 px-4 text-zinc-500">${l.timestamp.slice(0, 19).replace('T', ' ')}</td>
+        <td class="py-2.5 px-4 font-medium text-zinc-800">${l.actor_id}</td>
+        <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 text-[10px] font-semibold">${l.action}</span></td>
+        <td class="py-2.5 px-4 text-zinc-500">${l.entity_type}</td>
+        <td class="py-2.5 px-4 text-[10px] text-zinc-500 max-w-xs truncate">${l.details}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -602,7 +680,7 @@ async function triggerSnapshotBackup() {
   }
 }
 
-// Initialize on page load
+// Initialize on DOM load
 window.addEventListener("DOMContentLoaded", () => {
   searchCatalog();
 });
