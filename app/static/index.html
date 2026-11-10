@@ -326,12 +326,12 @@
                 <input type="text" id="handheld-shelf" value="SHELF-CS-01" class="w-full px-2.5 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded font-mono">
               </div>
               <div>
-                <label class="block text-[11px] font-semibold text-zinc-600">Detected Tag EPCs (comma-separated)</label>
-                <input type="text" id="handheld-epcs" value="E280110520000001, E280110520000002" class="w-full px-2.5 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded font-mono">
+                <label class="block text-[11px] font-semibold text-zinc-600">Detected Barcodes or RFID EPC Tags (comma-separated)</label>
+                <input type="text" id="handheld-epcs" value="ACC-10001, ACC-10002" class="w-full px-2.5 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded font-mono">
               </div>
-              <div class="flex gap-1.5 text-[10px]">
-                <button type="button" onclick="document.getElementById('handheld-epcs').value='E280110520000001, E280110520000002, E280110520000003'; executeHandheldScan();" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">All Found</button>
-                <button type="button" onclick="document.getElementById('handheld-epcs').value='E280110520000001, E280110520000006'; executeHandheldScan();" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">Misplaced Book</button>
+              <div class="flex flex-wrap gap-1.5 text-[10px]">
+                <button type="button" onclick="document.getElementById('handheld-epcs').value='ACC-10001, ACC-10002, ACC-10003'; executeHandheldScan();" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">Barcodes (All Found)</button>
+                <button type="button" onclick="document.getElementById('handheld-epcs').value='E280110520000001, E280110520000006'; executeHandheldScan();" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">RFID (1 Misplaced)</button>
                 <button type="button" onclick="document.getElementById('handheld-epcs').value=''; executeHandheldScan();" class="px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700">Empty Shelf</button>
               </div>
               <button onclick="executeHandheldScan()" class="w-full py-1.5 px-3 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white rounded transition">

@@ -22,9 +22,10 @@ def audit_shelf_inventory(
                WHERE i.shelf_location = ? AND i.status = 'AVAILABLE'""",
             (target_shelf,)
         )
-        expected_items = {row["rfid_epc"]: dict(row) for row in cursor.fetchall() if row["rfid_epc"]}
+        all_expected_rows = [dict(row) for row in cursor.fetchall()]
+        expected_items = {row["accession_number"]: row for row in all_expected_rows}
 
-        # 2. Fetch information for all scanned EPCs
+        # 2. Fetch information for all scanned identifiers (accepts either RFID EPC or Barcode Accession)
         scanned_items_map = {}
         if cleaned_epcs:
             placeholders = ",".join("?" for _ in cleaned_epcs)
@@ -32,17 +33,24 @@ def audit_shelf_inventory(
                 f"""SELECT i.*, t.title, t.author, t.dewey_decimal 
                     FROM items i
                     JOIN titles t ON i.title_id = t.id
-                    WHERE i.rfid_epc IN ({placeholders})""",
-                cleaned_epcs
+                    WHERE i.rfid_epc IN ({placeholders}) OR i.accession_number IN ({placeholders})""",
+                cleaned_epcs + cleaned_epcs
             )
-            scanned_items_map = {row["rfid_epc"]: dict(row) for row in cursor.fetchall()}
+            for row in cursor.fetchall():
+                d = dict(row)
+                if d.get("rfid_epc"):
+                    scanned_items_map[d["rfid_epc"]] = d
+                if d.get("accession_number"):
+                    scanned_items_map[d["accession_number"]] = d
 
         found_items = []
         misplaced_items = []
+        scanned_accounted_accessions = set()
 
-        for epc in cleaned_epcs:
-            item_info = scanned_items_map.get(epc)
+        for ident in cleaned_epcs:
+            item_info = scanned_items_map.get(ident)
             if item_info:
+                scanned_accounted_accessions.add(item_info["accession_number"])
                 cursor.execute(
                     "UPDATE items SET current_shelf = ?, last_seen_at = CURRENT_TIMESTAMP WHERE id = ?",
                     (target_shelf, item_info["id"])
@@ -57,18 +65,17 @@ def audit_shelf_inventory(
                     misplaced_items.append(misplaced_entry)
             else:
                 misplaced_items.append({
-                    "rfid_epc": epc,
-                    "accession_number": "UNKNOWN",
+                    "rfid_epc": ident,
+                    "accession_number": ident if ident.startswith("ACC-") else "UNKNOWN",
                     "title": "Unregistered / Unknown Tag",
                     "expected_shelf": "NONE",
                     "found_on_shelf": target_shelf
                 })
 
         # 3. Missing items: Expected on target_shelf, but not scanned
-        scanned_set = set(cleaned_epcs)
         missing_items = [
-            item for epc, item in expected_items.items()
-            if epc not in scanned_set
+            item for acc, item in expected_items.items()
+            if acc not in scanned_accounted_accessions
         ]
 
         if misplaced_items:
