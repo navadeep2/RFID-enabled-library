@@ -304,11 +304,16 @@ async function executeHandheldScan() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || "Audit failed");
 
+    const foundCount = data.found_items ? data.found_items.length : 0;
+    const misplacedCount = data.misplaced_items ? data.misplaced_items.length : 0;
+    const missingCount = data.missing_items ? data.missing_items.length : 0;
+
     box.innerHTML = `
       <div class="p-2.5 bg-zinc-50 border border-zinc-200 rounded text-xs space-y-1.5 mt-2">
-        <div class="font-semibold text-zinc-900">Audit for ${data.shelf_id}: Scanned ${data.total_scanned} | Found ${data.found_count} | Misplaced ${data.misplaced_count} | Missing ${data.missing_count}</div>
-        ${data.misplaced_items.length ? `<div class="text-rose-700">Misplaced: ${data.misplaced_items.map(m => m.title).join(", ")}</div>` : ''}
-        ${data.missing_items.length ? `<div class="text-amber-700">Missing: ${data.missing_items.map(m => m.title).join(", ")}</div>` : ''}
+        <div class="font-semibold text-zinc-900">Audit for ${data.shelf_id}: Scanned ${data.total_scanned} | Found ${foundCount} | Misplaced ${misplacedCount} | Missing ${missingCount}</div>
+        ${misplacedCount ? `<div class="text-rose-700">Misplaced (${misplacedCount}): ${data.misplaced_items.map(m => `${m.title} [Belongs to: ${m.expected_shelf || 'Other'}]`).join(", ")}</div>` : ''}
+        ${missingCount ? `<div class="text-amber-700">Missing from shelf (${missingCount}): ${data.missing_items.map(m => m.title).join(", ")}</div>` : ''}
+        ${foundCount ? `<div class="text-emerald-700">Found on shelf (${foundCount}): ${data.found_items.map(m => m.title).join(", ")}</div>` : ''}
       </div>
     `;
   } catch (err) {
@@ -331,15 +336,19 @@ async function executeGatePassage() {
     if (!res.ok) throw new Error(data.detail || "Passage check failed");
 
     if (data.alarm_triggered) {
+      const v = (data.violations && data.violations[0]) || {};
       box.innerHTML = `
-        <div class="p-2.5 bg-rose-50 border border-rose-200 rounded text-xs text-rose-800 font-semibold mt-2">
-          SECURITY BREACH: Unauthorized item detected at ${data.portal_id}. Alert email dispatched.
+        <div class="p-2.5 bg-rose-50 border border-rose-200 rounded text-xs text-rose-800 space-y-1 mt-2">
+          <div class="font-bold">🚨 THEFT ALARM TRIGGERED</div>
+          <div>Unauthorized item: <strong>${v.item_title || 'Unknown'}</strong> (Barcode: <code>${v.accession_number || rawEpcs[0]}</code>)</div>
+          <div class="text-[11px] text-zinc-600">Theft Protection was ARMED. Security incident recorded and alert email dispatched.</div>
         </div>
       `;
     } else {
       box.innerHTML = `
-        <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded text-xs text-emerald-800 font-semibold mt-2">
-          Authorized passage: All items disarmed.
+        <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded text-xs text-emerald-800 space-y-1 mt-2">
+          <div class="font-bold">✅ Authorized Exit (No Alarm)</div>
+          <div>All items passing through were properly checked out and disarmed.</div>
         </div>
       `;
     }
