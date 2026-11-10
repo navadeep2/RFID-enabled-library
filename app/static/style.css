@@ -1,4 +1,4 @@
-/* Minimalist Custom Extensions & Transitions */
+/* ponytail: clean minimalist styling, eliminated skeuomorphic 3D book spine gradients */
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
@@ -16,21 +16,21 @@
   background: #d4d4d8;
 }
 
-/* Tab panes switching */
+/* Tab panes */
 .tab-pane {
   display: none;
 }
 .tab-pane.active {
   display: block;
-  animation: fadeIn 0.15s ease-out;
+  animation: fadeIn 0.12s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(2px); }
+  from { opacity: 0; transform: translateY(1px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Sidebar navigation active style */
+/* Sidebar navigation item active state */
 .sidebar-nav-btn {
   color: #52525b; /* zinc-600 */
 }
@@ -41,64 +41,9 @@
 .sidebar-nav-btn.active {
   background-color: #18181b; /* zinc-900 */
   color: #ffffff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-.sidebar-nav-btn.active svg {
-  color: #ffffff !important;
 }
 
-/* Tactile 3D Book Spines */
-.book-spine-card {
-  width: 38px;
-  height: 120px;
-  border-radius: 3px 5px 5px 3px;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  padding: 0.5rem 0.35rem;
-  font-size: 0.65rem;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.book-spine-card:hover {
-  transform: translateY(-10px) scale(1.05);
-  box-shadow: 4px 10px 15px rgba(0, 0, 0, 0.5);
-}
-
-.book-spine-card.cat-cs {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-  color: #dbeafe;
-  border-left: 3px solid #3b82f6;
-}
-
-.book-spine-card.cat-lit {
-  background: linear-gradient(135deg, #881337 0%, #9f1239 100%);
-  color: #ffe4e6;
-  border-left: 3px solid #f43f5e;
-}
-
-.book-spine-card.cat-ref {
-  background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
-  color: #fef3c7;
-  border: 1px solid #fbbf24;
-  border-left: 3px solid #f59e0b;
-}
-
-.book-spine-card.cat-gen {
-  background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
-  color: #f4f4f5;
-  border-left: 3px solid #71717a;
-}
-
-/* Thermal Spine Print Layout */
+/* Thermal Spine Label Print Layout */
 @media print {
   body * {
     visibility: hidden;
